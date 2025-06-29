@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaHeart, FaYoutube } from "react-icons/fa6";
 import "./App.css";
+import { useIsOverflow } from "./components/isOverflow";
 
 // palette
 // background - #EBEBEB
@@ -56,6 +57,13 @@ export default function App() {
   const [barButtons] = useState<BarButton[]>(arrBarButtons);
   const [currentHighlight, setCurrentHighlight] = useState(0);
 
+  const ref = useRef(null);
+  const isOverflow = useIsOverflow(ref, (isOverflowCallback: any) => {
+    if (isOverflowCallback) {
+      setMessages((prev) => prev.slice(1));
+    }
+  });
+
   useEffect(() => {
     const ws = new WebSocket("ws://localhost:3000/ws");
     ws.onmessage = (event) => {
@@ -86,7 +94,7 @@ export default function App() {
           <div className="bg-[#C0C0C0] w-4/5"></div>
           <div className="bg-[#EBEBEB] w-[10%]"></div>
         </div>
-        <div className="h-[620px] w-4/5 self-center bg-[#EBEBEB]">
+        <div className="h-[620px] w-4/5 self-center bg-[#EBEBEB]" ref={ref}>
           {messages.map((msg, index) => (
             <div className="flex flex-row p-2 gap-4 border-b-[1px] border-[#C0C0C0]" key={index}>
               <div className="w-20 flex-1">
@@ -159,7 +167,7 @@ export default function App() {
           <div className="w-full flex flex-row text-2xl justify-end px-12 pb-2 gap-12 items-center">
             <div className='flex flex-row items-center gap-2 justify-evenly'>
               <FaHeart className='' />
-              <span className=''>Follow</span>
+              <span className=''>{isOverflow ? 'Overflow Detected!' : 'Follow'}</span>
             </div>
             <div className='flex flex-row items-center gap-1 justify-evenly'>
               <div className='bg-[#101010] text-[#EBEBEB] rounded-full px-2 py-1 text-sm font-bold'>!L</div>
