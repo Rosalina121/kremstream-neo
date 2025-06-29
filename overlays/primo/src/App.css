@@ -1,0 +1,22 @@
+@keyframes highlight-spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.border-gradient {
+    background:conic-gradient(from var(--angle), #4E79FB 0deg, #C9A5FA 90deg, #FCD2DD 180deg, #256FEE 270deg, #4E79FB 360deg);
+    animation: rotate-border-gradient 2s linear infinite;
+}
+
+@property --angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+
+@keyframes rotate-border-gradient {
+    to {
+        --angle: 360deg;
+    }
+}
