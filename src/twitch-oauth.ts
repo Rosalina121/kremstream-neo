@@ -39,7 +39,8 @@ export function registerTwitchOAuth(app: Elysia) {
                         client_id: CLIENT_ID,
                         redirect_uri: REDIRECT_URI,
                         response_type: "code",
-                        scope: "user:read:email moderator:read:followers",
+                        // for reading new follows and chat (+deleted) events
+                        scope: "user:read:email moderator:read:followers user:read:chat",
                     }),
             },
         })

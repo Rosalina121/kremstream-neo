@@ -8,7 +8,8 @@
   "scripts": {
     "start": "bun src/index.ts",
     "build:overlay:primo": "cd overlays/primo && bun run build",
-    "build:overlays": "bun run build:overlay:primo"
+    "build:overlays": "bun run build:overlay:primo",
+    "all": "bun run build:overlays && bun run start"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"

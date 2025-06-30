@@ -1,10 +1,9 @@
 import { Elysia } from "elysia";
 import { registerTwitchOAuth, loadTokens } from "./twitch-oauth";
-import { startTwitchChat } from "./twitch-chat";
 import { tokenEvents } from "./token-events";
 import serveStatic from "@elysiajs/static";
 import { join } from "path";
-import { startTwitchFollowsWS } from "./twitch-follows";
+import { startTwitchEventWS } from "./twitch-events";
 
 const app = new Elysia();
 const wsClients = new Set<WebSocket>();
@@ -20,32 +19,33 @@ registerTwitchOAuth(app);
 let chatInitialized = false;
 async function initializeChatAndModules() {
     if (chatInitialized) return;
+
     const tokens = await loadTokens();
+
     if (tokens) {
         chatInitialized = true;
-        startTwitchChat({
-            channel: "kremstream",
-            onMessage: (msg) => {
-                const json = JSON.stringify({ type: "chat", data: msg });
-                console.log(msg)
-                for (const ws of wsClients) ws.send(json);
-            },
-            clientId: process.env.TWITCH_CLIENT_ID!,
-            accessToken: tokens.access_token,
-        });
-        console.log("Twitch chat initialized.");
 
-        startTwitchFollowsWS({
+        startTwitchEventWS({
             accessToken: tokens.access_token,
             clientId: process.env.TWITCH_CLIENT_ID!,
             broadcasterUserId: process.env.TWITCH_USER_ID!,
             onFollow: (event) => {
-                const msg = JSON.stringify({ type: "follow", data: { username: event.username } });
+                const msg = JSON.stringify({ type: "follow", data: { username: event.username, profilePic: event.profilePic } });
                 console.log(msg);
                 for (const ws of wsClients) ws.send(msg);
-            }
+            },
+            onChatMessage: (msg) => {
+                const json = JSON.stringify({ type: "chat", data: msg });
+                console.log(msg)
+                for (const ws of wsClients) ws.send(json);
+            },
+            onMessageDelete: (msg) => {
+                const json = JSON.stringify({ type: "chatDelete", data: msg });
+                console.log(msg)
+                for (const ws of wsClients) ws.send(json);
+            },
         });
-        console.log("Twitch follows initialized.");
+        console.log("Twitch events initialized.");
     }
 }
 
