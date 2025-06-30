@@ -52,8 +52,8 @@ async function initializeChatAndModules() {
 // serve overlays
 app.use(
     serveStatic({
-        prefix: "/overlay/primo",
-        assets: join(process.cwd(), "overlays/primo/dist").toString(),
+        prefix: "/overlay/switch2",
+        assets: join(process.cwd(), "overlays/switch2/dist").toString(),
         alwaysStatic: true,
     })
 );

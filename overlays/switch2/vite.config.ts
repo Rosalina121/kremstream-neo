@@ -9,5 +9,5 @@ export default defineConfig({
         outDir: 'dist',
         emptyOutDir: true,
     },
-    base: '/overlay/primo/',
+    base: '/overlay/switch2/',
 })

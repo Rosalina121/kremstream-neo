@@ -7,8 +7,8 @@
   },
   "scripts": {
     "start": "bun src/index.ts",
-    "build:overlay:primo": "cd overlays/primo && bun run build",
-    "build:overlays": "bun run build:overlay:primo",
+    "build:overlay:switch2": "cd overlays/switch2 && bun run build",
+    "build:overlays": "bun run build:overlay:switch2",
     "all": "bun run build:overlays && bun run start"
   },
   "peerDependencies": {

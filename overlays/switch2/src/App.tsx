@@ -1,7 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import { FaHeart, FaYoutube } from "react-icons/fa6";
 import "./App.css";
 import { useIsOverflow } from "./components/isOverflow";
+
+// icons
+import { FaHeart } from "react-icons/fa6";
+import { SlSocialSoundcloud } from "react-icons/sl";
+import { RiGithubLine } from "react-icons/ri";
+import { FiYoutube } from "react-icons/fi";
+import { TbGenderTransgender } from "react-icons/tb";
+import { LuNewspaper } from "react-icons/lu";
 
 // palette
 // background - #EBEBEB
@@ -12,6 +19,14 @@ import { useIsOverflow } from "./components/isOverflow";
 // text Options - #101010
 // text hover - #1666D8
 //
+// dark mode
+// background - #262626
+// bar background - #363636
+// text - #D0D0D0
+// hover text - #24C0EE
+// message sender uses text
+// message text uses hover text
+//
 // gradient
 // blue - #1A77F5
 // light blue - #BEF8FC
@@ -20,6 +35,26 @@ import { useIsOverflow } from "./components/isOverflow";
 // purple2 - #E0B7FF
 // pink - #FCCCEB
 //
+
+const lightPalette = {
+  background: "#EBEBEB",
+  barBackground: "#F4F4F4",
+  messageText: "#4275C5",
+  messageSender: "#3A3A3A",
+  messageBar: "#C0C0C0",
+  textOptions: "#101010",
+  textHover: "#1666D8",
+};
+
+const darkPalette = {
+  background: "#262626",
+  barBackground: "#363636",
+  messageText: "#24C0EE",
+  messageSender: "#D0D0D0",
+  messageBar: "#444950",
+  textOptions: "#D0D0D0",
+  textHover: "#24C0EE",
+};
 
 type ChatMsg = {
   id: string;
@@ -42,15 +77,31 @@ type BarButton = {
 
 const barButtons: BarButton[] = [
   {
-    icon: <FaYoutube className="text-5xl" />,
-    highlightText: "Youtube",
+    icon: <FiYoutube className="text-5xl text-red-600" />,
+    highlightText: "youtube.com/@alina_rosa",
     idx: 1,
   },
   {
-    icon: <FaYoutube className="text-5xl text-red-600" />,
-    highlightText: "red yt",
+    icon: <RiGithubLine className="text-5xl text-gray-500" />,
+    highlightText: "github.com/rosalina121",
     idx: 2,
   },
+  {
+    icon: <SlSocialSoundcloud className="text-[3.25rem] text-orange-500" />,
+    highlightText: "soundcloud.com/rosalina121",
+    idx: 3,
+  },
+  {
+    icon: <LuNewspaper className="text-5xl text-purple-600" />,
+    highlightText: "dupa.gay",
+    idx: 4,
+  },
+  {
+    icon: <TbGenderTransgender className="text-5xl text-pink-500" />,
+    highlightText: "Human rights",
+    idx: 5,
+  },
+
 ];
 
 
@@ -60,6 +111,9 @@ export default function App() {
   const [latestFollow, setLatestFollow] = useState<Follow | null>(null);
   const [followQueue, setFollowQueue] = useState<Follow[]>([]);
   const followTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const [darkMode, setDarkMode] = useState(true);
+  const palette = darkMode ? darkPalette : lightPalette;
 
   const ref = useRef(null);
   useIsOverflow(ref, (isOverflowCallback: any) => {
@@ -100,6 +154,9 @@ export default function App() {
           setFollowQueue((prev) => [...prev, msg.data]);
         }
       }
+      if (msg.type === "darkMode") {
+        setDarkMode(!darkMode);
+      }
     };
     return () => ws.close();
   }, []);
@@ -119,40 +176,38 @@ export default function App() {
   }, [latestFollow, followQueue]);
 
   return (
-    <div className="w-screen h-screen flex flex-row text-[#101010]">
-      <div className="bg-[#EBEBEB] w-96 h-full flex-col flex">
+    <div className="w-screen h-screen flex flex-row" style={{ color: palette.textOptions }}>
+      <div className="flex-col flex" style={{ background: palette.background, width: 384, height: "100%" }}>
         <div className="h-18 pb-2 pl-[10%] w-full flex items-end">
-          <span className="text-2xl">Kremstream's Chat</span>
+          <span className="text-2xl" style={{ color: palette.textOptions }}>Kremstream's Chat</span>
         </div>
         <div className="w-full h-0.5 flex justify-center">
-          <div className="bg-[#EBEBEB] w-[10%]"></div>
-          <div className="bg-[#C0C0C0] w-4/5"></div>
-          <div className="bg-[#EBEBEB] w-[10%]"></div>
+          <div style={{ background: palette.background, width: "10%" }}></div>
+          <div style={{ background: palette.messageBar, width: "80%" }}></div>
+          <div style={{ background: palette.background, width: "10%" }}></div>
         </div>
-        <div className="h-[620px] w-4/5 self-center bg-[#EBEBEB]" ref={ref}>
+        <div className="h-[620px] w-4/5 self-center" style={{ background: palette.background }} ref={ref}>
           {messages.map((msg, index) => (
-            <div className="flex flex-row p-2 gap-4 border-b-[1px] border-[#C0C0C0]" key={index}>
+            <div className="flex flex-row p-2 gap-4 border-b-[1px]" style={{ borderColor: palette.messageBar }} key={index}>
               <div className="w-20 flex-1">
                 <img src={msg.profilePic} alt="" />
               </div>
               <div className="flex flex-col flex-3">
-                <span className="text-2xl">{msg.username}</span>
-                <span className="break-normal text-[#4275C5]">{msg.text}</span>
+                <span className="text-2xl" style={{ color: palette.messageSender }}>{msg.username}</span>
+                <span className="break-normal" style={{ color: palette.messageText }}>{msg.text}</span>
               </div>
             </div>
           ))}
-
-
         </div>
         <div className="w-full h-0.5 flex justify-center">
-          <div className="bg-[#EBEBEB] w-[10%]"></div>
-          <div className="bg-[#C0C0C0] w-4/5"></div>
-          <div className="bg-[#EBEBEB] w-[10%]"></div>
+          <div style={{ background: palette.background, width: "10%" }}></div>
+          <div style={{ background: palette.messageBar, width: "80%" }}></div>
+          <div style={{ background: palette.background, width: "10%" }}></div>
         </div>
         {/* cam box */}
-        <div className="bg-[#EBEBEB] w-full aspect-square flex items-center justify-center p-8">
+        <div style={{ background: palette.background }} className="w-full aspect-square flex items-center justify-center p-8">
           <div className={`${currentHighlight === 0 ? 'border-gradient' : 'bg-none'} w-full flex items-center justify-center p-1.5 rounded-4xl`}>
-            <div className="bg-[#EBEBEB] aspect-square w-full rounded-3xl p-2">
+            <div style={{ background: palette.background }} className="aspect-square w-full rounded-3xl p-2">
               <div className="bg-[#ff00ff] aspect-square w-full rounded-2xl shadow-lg">
               </div>
             </div>
@@ -175,8 +230,8 @@ export default function App() {
         </div>
 
         {/* Bottom bar */}
-        <div className="bg-[#EBEBEB] h-full flex flex-col justify-around">
-          <div className="bg-[#F4F4F4] flex gap-8 p-4 rounded-full self-center mt-8 shadow-md">
+        <div style={{ background: palette.background }} className="h-full flex flex-col justify-around">
+          <div style={{ background: palette.barBackground }} className="flex gap-8 p-4 rounded-full self-center mt-8 shadow-md">
             {barButtons.map((button, index) => (
               <div key={index} className="relative flex flex-col items-center justify-center w-20 h-20">
 
@@ -187,7 +242,8 @@ export default function App() {
                   }}>
 
                 </div>
-                <div className="absolute flex items-center justify-center w-[90%] h-[90%] rounded-full bg-[#F4F4F4]">
+                <div className="absolute flex items-center justify-center w-[90%] h-[90%] rounded-full"
+                  style={{ background: palette.barBackground }}>
                   {button.icon}
                 </div>
 
@@ -196,7 +252,7 @@ export default function App() {
                     className="absolute left-1/2 mt-40 text-2xl"
                     style={{
                       transform: "translateX(-50%)",
-                      color: "#1666D8",
+                      color: palette.textHover,
                       textAlign: "center",
                       lineHeight: 1.1,
                       whiteSpace: "nowrap",
@@ -211,13 +267,19 @@ export default function App() {
           <div className="w-full flex flex-row text-2xl justify-end px-12 pb-2 gap-12 items-center">
             <div className='flex flex-row items-center gap-2 justify-evenly'>
               <FaHeart className='' />
-              <span className=''>Follow</span>
+              <span className='' style={{ color: palette.textOptions }}>Follow</span>
             </div>
             <div className='flex flex-row items-center gap-1 justify-evenly'>
-              <div className='bg-[#101010] text-[#EBEBEB] rounded-full px-2 py-1 text-sm font-bold'>!L</div>
+              <div style={{
+                background: palette.textOptions,
+                color: palette.background
+              }} className='rounded-full px-2 py-1 text-sm font-bold'>!L</div>
               {"/"}
-              <div className='bg-[#101010] text-[#EBEBEB] rounded-full px-2 py-1 text-sm font-bold'>!R</div>
-              <span className='ml-1'>Move cursor</span>
+              <div style={{
+                background: palette.textOptions,
+                color: palette.background
+              }} className='rounded-full px-2 py-1 text-sm font-bold'>!R</div>
+              <span className='ml-1' style={{ color: palette.textOptions }}>Move cursor</span>
             </div>
           </div>
         </div>

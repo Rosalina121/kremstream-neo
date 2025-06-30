@@ -1,4 +1,3 @@
-// overlays/primo/src/components/SwitchHighlight.tsx
 import React from "react";
 
 type SwitchHighlightProps = {
