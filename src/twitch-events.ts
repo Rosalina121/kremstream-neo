@@ -141,7 +141,6 @@ export function startTwitchEventWS(opts: StartOptions) {
         ws = new WebSocket(url);
 
         ws.onopen = () => {
-            console.log("[TwitchFollowsWS] Connected to Twitch EventSub WebSocket");
             resetKeepalive();
         };
 
@@ -161,7 +160,6 @@ export function startTwitchEventWS(opts: StartOptions) {
 
             if (type === "session_reconnect") {
                 reconnectUrl = data.payload.session.reconnect_url;
-                console.log("[TwitchFollowsWS] Reconnect requested, connecting to new URL...");
                 ws?.close();
                 connect(reconnectUrl!);
             }
@@ -185,8 +183,6 @@ export function startTwitchEventWS(opts: StartOptions) {
                 }
 
                 if (subType === "channel.chat.message" && opts.onChatMessage) {
-                    // console.log(`Received chat message: ${JSON.stringify(event)}`);
-
                     const userId = event.chatter_user_id;
                     const username = event.chatter_user_name;
                     const color = event.chatter_color || "#ff256a";
@@ -215,13 +211,11 @@ export function startTwitchEventWS(opts: StartOptions) {
         };
 
         ws.onclose = () => {
-            console.log("[TwitchFollowsWS] WebSocket closed, reconnecting immediately...");
             if (keepaliveTimeout) clearTimeout(keepaliveTimeout);
             connect(reconnectUrl || undefined);
         };
 
         ws.onerror = (err) => {
-            console.error("[TwitchFollowsWS] WebSocket error:", err);
             ws?.close();
         };
     }

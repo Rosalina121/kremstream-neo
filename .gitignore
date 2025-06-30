@@ -178,3 +178,5 @@ dist
 # Twitch
 twitch_tokens.json
 twitch-user-cache.json
+# Easter eggs
+src/sounds/*

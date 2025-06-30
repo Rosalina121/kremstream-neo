@@ -107,7 +107,7 @@ const barButtons: BarButton[] = [
 
 export default function App() {
   const [messages, setMessages] = useState<ChatMsg[]>([]);
-  const [currentHighlight, setCurrentHighlight] = useState(0);
+  const [currentHighlight, setCurrentHighlight] = useState(1);
   const [latestFollow, setLatestFollow] = useState<Follow | null>(null);
   const [followQueue, setFollowQueue] = useState<Follow[]>([]);
   const followTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -127,6 +127,7 @@ export default function App() {
   useEffect(() => {
     const ws = new WebSocket("ws://localhost:3000/ws");
     ws.onmessage = (event) => {
+      // console.log("Received message:", event.data);
       const msg = JSON.parse(event.data);
       if (msg.type === "chat") {
         setMessages((prev) => [...prev, msg.data]);
@@ -154,8 +155,8 @@ export default function App() {
           setFollowQueue((prev) => [...prev, msg.data]);
         }
       }
-      if (msg.type === "darkMode") {
-        setDarkMode(!darkMode);
+      if (msg.type === "toggleDarkMode") {
+        setDarkMode((prev) => !prev);
       }
     };
     return () => ws.close();
@@ -177,8 +178,9 @@ export default function App() {
 
   return (
     <div className="w-screen h-screen flex flex-row" style={{ color: palette.textOptions }}>
-      <div className="flex-col flex" style={{ background: palette.background, width: 384, height: "100%" }}>
-        <div className="h-18 pb-2 pl-[10%] w-full flex items-end">
+      <div className="flex-col flex" style={{ width: 384, height: "100%" }}>
+        <div className="h-18 pb-2 pl-[10%] w-full flex items-end"
+          style={{ background: palette.background }}>
           <span className="text-2xl" style={{ color: palette.textOptions }}>Kremstream's Chat</span>
         </div>
         <div className="w-full h-0.5 flex justify-center">
@@ -186,9 +188,10 @@ export default function App() {
           <div style={{ background: palette.messageBar, width: "80%" }}></div>
           <div style={{ background: palette.background, width: "10%" }}></div>
         </div>
-        <div className="h-[620px] w-4/5 self-center" style={{ background: palette.background }} ref={ref}>
+        {/* messages */}
+        <div className="h-[620px] w-full flex flex-col items-center" style={{ background: palette.background }} ref={ref}>
           {messages.map((msg, index) => (
-            <div className="flex flex-row p-2 gap-4 border-b-[1px]" style={{ borderColor: palette.messageBar }} key={index}>
+            <div className="flex w-4/5 flex-row p-2 gap-4 border-b-[1px]" style={{ borderColor: palette.messageBar }} key={index}>
               <div className="w-20 flex-1">
                 <img src={msg.profilePic} alt="" />
               </div>
@@ -204,20 +207,65 @@ export default function App() {
           <div style={{ background: palette.messageBar, width: "80%" }}></div>
           <div style={{ background: palette.background, width: "10%" }}></div>
         </div>
-        {/* cam box */}
-        <div style={{ background: palette.background }} className="w-full aspect-square flex items-center justify-center p-8">
-          <div className={`${currentHighlight === 0 ? 'border-gradient' : 'bg-none'} w-full flex items-center justify-center p-1.5 rounded-4xl`}>
-            <div style={{ background: palette.background }} className="aspect-square w-full rounded-3xl p-2">
-              <div className="bg-[#ff00ff] aspect-square w-full rounded-2xl shadow-lg">
+        {/* cam box idk jesus */}
+        <div className="w-full flex flex-col aspect-square">
+          <div className="h-8 w-full" style={{ background: palette.background }}></div>
+          <div className="w-full grow flex">
+            <div className="w-8 h-full" style={{ background: palette.background }}></div>
+            {/* evil stream cutout fuckery
+                beware
+
+                layout is like
+                div - shadow ho hide the gap between 2 shadows in child - the fact that this still isnt fixed infuriates me
+                  div - shadows to stretch the bacground inside the gradient border, and make rounded corers
+                    div - gradient mask path fuckery
+
+            */}
+            <div className="w-full grow flex p-1"
+              style={{
+                boxShadow: `inset 0 0 0 16px ${palette.background}`,
+                borderRadius: "16px",
+              }}>
+              <div className="grow"
+                style={{
+                  // fake the background behind the icon
+                  outline: `20px solid ${palette.background}`,
+                  borderRadius: "32px",
+                  boxShadow: `inset 0 0 0 16px ${palette.background}, 0 0 0 24px ${palette.background}`,
+                }}>
+                <div
+                  className={`${currentHighlight === 0 ? 'border-gradient' : ""} w-full h-full flex items-center justify-center p-1.5 rounded-4xl`}
+                  style={{
+                    background: currentHighlight === 0 ? "" : palette.background,
+                    position: "relative",
+                    WebkitMask: `
+                      url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" preserveAspectRatio="none"><rect x="8" y="8" width="304" height="304" rx="16" fill="black"/></svg>') 0/100% 100%,
+                      linear-gradient(#fff,#fff)
+                    `,
+                    WebkitMaskComposite: "destination-out",
+                    mask: `
+                      url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" preserveAspectRatio="none"><rect x="8" y="8" width="304" height="304" rx="24" fill="black"/></svg>') 0/100% 100%,
+                      linear-gradient(#fff,#fff)
+                    `,
+                    maskComposite: "exclude",
+                    // jesus the depths of stackoverflow i had to rummage through to find this fuck
+                  }}
+                >
+                  {/* Optionally, you can add a border or highlight for the cam box here */}
+                </div>
               </div>
             </div>
+
+            <div className="w-8 h-full" style={{ background: palette.background }}></div>
           </div>
+          <div className="h-8 w-full" style={{ background: palette.background }}></div>
+
         </div>
       </div>
-      <div className="bg-blue-400 flex flex-col grow">
+      <div className="flex flex-col grow">
 
         {/* video */}
-        <div className="w-full aspect-video bg-[#ff00ff]">
+        <div className="w-full aspect-video  h-[864px]">
           {/* follow popup */}
           <div className="bg-black/90 min-w-96 w-fit h-24 flex m-2 rounded-lg"
             style={{ display: latestFollow ? "" : "none" }}>
@@ -230,7 +278,7 @@ export default function App() {
         </div>
 
         {/* Bottom bar */}
-        <div style={{ background: palette.background }} className="h-full flex flex-col justify-around">
+        <div style={{ background: palette.background }} className="h-[216px] flex flex-col justify-around">
           <div style={{ background: palette.barBackground }} className="flex gap-8 p-4 rounded-full self-center mt-8 shadow-md">
             {barButtons.map((button, index) => (
               <div key={index} className="relative flex flex-col items-center justify-center w-20 h-20">

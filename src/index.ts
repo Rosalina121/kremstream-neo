@@ -4,6 +4,7 @@ import { tokenEvents } from "./token-events";
 import serveStatic from "@elysiajs/static";
 import { join } from "path";
 import { startTwitchEventWS } from "./twitch-events";
+import { playPipe } from "./eastereggs";
 
 const app = new Elysia();
 const wsClients = new Set<WebSocket>();
@@ -11,7 +12,16 @@ const wsClients = new Set<WebSocket>();
 app.ws("/ws", {
     open(ws) { wsClients.add(ws); },
     close(ws) { wsClients.delete(ws); },
-    message(ws, data) { /* handle overlay/admin messages if needed */ }
+    message(ws, data: any) {
+        // overlay message handler
+        console.log(data);
+        if (data.type === "overlay") {
+            if (data.data.subType === "darkMode") {
+                const json = JSON.stringify({ type: "toggleDarkMode" });
+                for (const ws of wsClients) ws.send(json);
+            }
+        }
+    }
 });
 
 registerTwitchOAuth(app);
@@ -37,6 +47,9 @@ async function initializeChatAndModules() {
             onChatMessage: (msg) => {
                 const json = JSON.stringify({ type: "chat", data: msg });
                 console.log(msg)
+                if (msg.text.includes("!pipe")) {
+                    playPipe()
+                }
                 for (const ws of wsClients) ws.send(json);
             },
             onMessageDelete: (msg) => {
@@ -55,8 +68,15 @@ app.use(
         prefix: "/overlay/switch2",
         assets: join(process.cwd(), "overlays/switch2/dist").toString(),
         alwaysStatic: true,
-    })
+    }),
 );
+app.use(
+    serveStatic({
+        prefix: "/admin/deck",
+        assets: join(process.cwd(), "admin/deck/dist").toString(),
+        alwaysStatic: true,
+    }),
+)
 
 app.listen(3000, async () => {
     const tokens = await loadTokens();
