@@ -1,3 +1,9 @@
+/*
+  This is basically a Streamdeck-like interface with buttons that invoke certain server actions
+  Some may be propagated to an overlay (like drak mode toggle), some are only server/PC side,
+      like toggling a scene in OBS or resetting VNyan
+*/
+
 import { useEffect, useRef } from "react";
 import "./App.css";
 
