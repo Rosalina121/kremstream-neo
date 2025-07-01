@@ -27,39 +27,65 @@ app.ws("/ws", {
 registerTwitchOAuth(app);
 
 let chatInitialized = false;
+let chatInitPromise: Promise<void> | null = null;   // ugly, may fix later
+
 async function initializeChatAndModules() {
     if (chatInitialized) return;
+    if (chatInitPromise) return chatInitPromise;
 
-    const tokens = await loadTokens();
+    chatInitPromise = (async () => {
+        const tokens = await loadTokens();
 
-    if (tokens) {
-        chatInitialized = true;
+        if (tokens) {
+            chatInitialized = true;
 
-        startTwitchEventWS({
-            accessToken: tokens.access_token,
-            clientId: process.env.TWITCH_CLIENT_ID!,
-            broadcasterUserId: process.env.TWITCH_USER_ID!,
-            onFollow: (event) => {
-                const msg = JSON.stringify({ type: "follow", data: { username: event.username, profilePic: event.profilePic } });
-                console.log(msg);
-                for (const ws of wsClients) ws.send(msg);
-            },
-            onChatMessage: (msg) => {
-                const json = JSON.stringify({ type: "chat", data: msg });
-                console.log(msg)
-                if (msg.text.includes("!pipe")) {
-                    playPipe()
-                }
-                for (const ws of wsClients) ws.send(json);
-            },
-            onMessageDelete: (msg) => {
-                const json = JSON.stringify({ type: "chatDelete", data: msg });
-                console.log(msg)
-                for (const ws of wsClients) ws.send(json);
-            },
-        });
-        console.log("Twitch events initialized.");
-    }
+            /*
+            * WS messages structure:
+            * {
+            *   type: string,
+            *   data: {
+            *     subType?: string,
+            *     type/subtype specific props...
+            *   }
+            * }
+            * 
+            * types:
+            * - chat
+            * - follow
+            * - chatDelete
+            * 
+            * - overlay (are propagated to overlays from other views)
+            *   - darkMode
+            */
+            
+            startTwitchEventWS({
+                accessToken: tokens.access_token,
+                clientId: process.env.TWITCH_CLIENT_ID!,
+                broadcasterUserId: process.env.TWITCH_USER_ID!,
+                onFollow: (event) => {
+                    const msg = JSON.stringify({ type: "follow", data: { username: event.username, profilePic: event.profilePic } });
+                    console.log(msg);
+                    for (const ws of wsClients) ws.send(msg);
+                },
+                onChatMessage: (msg) => {
+                    const json = JSON.stringify({ type: "chat", data: msg });
+                    console.log(msg)
+                    if (msg.text.includes("!pipe")) {
+                        playPipe()
+                    }
+                    for (const ws of wsClients) ws.send(json);
+                },
+                onMessageDelete: (msg) => {
+                    const json = JSON.stringify({ type: "chatDelete", data: msg });
+                    console.log(msg)
+                    for (const ws of wsClients) ws.send(json);
+                },
+            });
+            console.log("Twitch events initialized.");
+        }
+    })();
+
+    await chatInitPromise;
 }
 
 // serve overlays
@@ -82,7 +108,7 @@ app.listen(3000, async () => {
     const tokens = await loadTokens();
     if (tokens) {
         console.log("Access token loaded:", tokens.access_token);
-        initializeChatAndModules();
+        await initializeChatAndModules();
     } else {
         console.log("No tokens found. Visit http://localhost:3000/auth/twitch to authorize.");
     }

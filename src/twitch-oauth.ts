@@ -17,12 +17,47 @@ export async function saveTokens(tokens: Tokens) {
     await Bun.write(TOKEN_PATH, JSON.stringify(tokens));
 }
 
+export async function refreshTokens(tokens: Tokens): Promise<Tokens | null> {
+    const params = new URLSearchParams({
+        client_id: CLIENT_ID,
+        client_secret: CLIENT_SECRET,
+        grant_type: "refresh_token",
+        refresh_token: tokens.refresh_token,
+    });
+
+    const res = await fetch("https://id.twitch.tv/oauth2/token", {
+        method: "POST",
+        body: params,
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data.access_token) return null;
+
+    const newTokens: Tokens = {
+        access_token: data.access_token,
+        refresh_token: data.refresh_token ?? tokens.refresh_token,
+        expires_in: data.expires_in,
+        obtained_at: Date.now(),
+    };
+    await saveTokens(newTokens);
+    tokenEvents.emit("tokenReady");
+    return newTokens;
+}
+
 export async function loadTokens(): Promise<Tokens | null> {
     try {
         const file = Bun.file(TOKEN_PATH);
         if (!(await file.exists())) return null;
         const text = await file.text();
-        return JSON.parse(text);
+        const tokens: Tokens = JSON.parse(text);
+
+        const now = Date.now();
+        const expiresAt = tokens.obtained_at + (tokens.expires_in * 1000) - 60_000;
+        if (now >= expiresAt) {
+            const refreshed = await refreshTokens(tokens);
+            return refreshed;
+        }
+        return tokens;
     } catch {
         return null;
     }
