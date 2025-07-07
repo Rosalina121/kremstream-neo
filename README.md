@@ -36,6 +36,7 @@ TWITCH_CLIENT_ID=your_client_id
 TWITCH_CLIENT_SECRET=your_client_secret
 TWITCH_REDIRECT_URI=http://localhost:3000/auth/callback
 TWITCH_USER_ID=your_user_id
+OBS_WS_PASSWORD=obs_websocket_password
 ```
 All are self explanatory. You can find your user_id via a simple API call, or just any website that offers that.
 
@@ -74,3 +75,6 @@ just like in the Switch 2 OS UI. Buttons are defined in a simple array, includin
 
 The camera cutout has a dirty hacky CSS so that the transparency can be a rounded rectangle, yet still have this nice gradient moving border. It's ugly, it's rough, and frankly I'm surprised that OBS browser source handles it well.
 
+## External programs
+### OBS
+There's a websocket server connected to the OBS' one. You can change scenes and do other stuff straight from the deck view.

@@ -5,9 +5,12 @@ import serveStatic from "@elysiajs/static";
 import { join } from "path";
 import { startTwitchEventWS } from "./twitch-events";
 import { playPipe } from "./eastereggs";
+import { OBSWebSocket } from "./obs-websocket";
 
 const app = new Elysia();
 const wsClients = new Set<WebSocket>();
+
+const obsClient = new OBSWebSocket();
 
 app.ws("/ws", {
     open(ws) { wsClients.add(ws); },
@@ -21,10 +24,16 @@ app.ws("/ws", {
                 for (const ws of wsClients) ws.send(json);
             }
         }
+        if (data.type === "obs") {
+            if (data.data.subType === "scene") {
+                obsClient.setCurrentProgramScene(data.data.sceneName);
+            }
+        }
     }
 });
 
 registerTwitchOAuth(app);
+obsClient.connect();
 
 let chatInitialized = false;
 let chatInitPromise: Promise<void> | null = null;   // ugly, may fix later
@@ -48,16 +57,18 @@ async function initializeChatAndModules() {
             *     type/subtype specific props...
             *   }
             * }
-            * 
+            *
             * types:
             * - chat
             * - follow
             * - chatDelete
-            * 
+            *
             * - overlay (are propagated to overlays from other views)
             *   - darkMode
+            * - obs
+            *   - scene
             */
-            
+
             startTwitchEventWS({
                 accessToken: tokens.access_token,
                 clientId: process.env.TWITCH_CLIENT_ID!,
