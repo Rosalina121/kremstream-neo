@@ -1,3 +1,5 @@
+import { extractTextFromImage } from "./ocr";
+
 type OBSHello = {
     op: 0;
     d: {
@@ -46,9 +48,9 @@ export class OBSWebSocket {
     constructor(private url = "ws://localhost:4455") { }
 
     /**
-     * Connects and authenticates to OBS WebSocket.
-     * @param password OBS WebSocket password (set in OBS settings)
-     */
+      * Connects and authenticates to OBS WebSocket.
+      * @param password OBS WebSocket password (set in OBS settings)
+      */
     async connect(): Promise<void> {
         if (this.connectPromise) return this.connectPromise;
         this.connectPromise = new Promise((resolve, reject) => {
@@ -151,6 +153,34 @@ export class OBSWebSocket {
 
     setCurrentProgramScene(sceneName: string): Promise<void> {
         return this.sendRequest("SetCurrentProgramScene", { sceneName: sceneName });
+    }
+
+    async getSourceScreenshot(
+        sourceName: string,
+        filePath: string,
+        imageFormat: string = "png",
+        imageWidth?: number,
+        imageHeight?: number,
+        imageCompressionQuality: number = -1
+    ): Promise<void> {
+        const params: Record<string, any> = {
+            sourceName,
+            imageFormat,
+            imageCompressionQuality,
+        };
+        if (imageWidth !== undefined) params.imageWidth = imageWidth;
+        if (imageHeight !== undefined) params.imageHeight = imageHeight;
+
+        const result = await this.sendRequest("GetSourceScreenshot", params);
+        const base64Image = result.responseData.imageData;
+        const strippedImage = base64Image.replace(/^data:image\/png;base64,/, ""); // i think its always png
+
+        // save to file
+        const buffer = Buffer.from(strippedImage, "base64");
+        await Bun.write(filePath, buffer);
+        
+        const text = await extractTextFromImage(filePath);
+        console.log(text);
     }
 
     close() {

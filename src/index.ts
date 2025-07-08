@@ -82,7 +82,8 @@ async function initializeChatAndModules() {
                     const json = JSON.stringify({ type: "chat", data: msg });
                     console.log(msg)
                     if (msg.text.includes("!pipe")) {
-                        playPipe()
+                        obsClient.getSourceScreenshot("HD60 X", "test.png", "png", 1920, 1080)
+                        // playPipe()
                     }
                     for (const ws of wsClients) ws.send(json);
                 },

@@ -177,6 +177,8 @@ dist
 # Server specific
 # Twitch
 twitch_tokens.json
-twitch-user-cache.json
+twitch_chat_cache.json
 # Easter eggs
 src/sounds/*
+# tesseract
+*.traineddata
