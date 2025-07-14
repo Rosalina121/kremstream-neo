@@ -1,0 +1,13 @@
+@font-face {
+    font-family: 'Comic';
+    src: url('./assets/ComicRelief-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Comic';
+    src: url('./assets/ComicRelief-Bold.woff2') format('woff');
+    font-weight: bold;
+    font-style: normal;
+}

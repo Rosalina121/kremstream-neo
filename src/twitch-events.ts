@@ -192,6 +192,7 @@ export function startTwitchEventWS(opts: StartOptions) {
                     if (!profilePic && userId) {
                         profilePic = await fetchProfilePic(userId);
                     }
+                    // TODO: parse emotes
 
                     opts.onChatMessage({
                         id,

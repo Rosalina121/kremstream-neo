@@ -78,3 +78,8 @@ The camera cutout has a dirty hacky CSS so that the transparency can be a rounde
 ## External programs
 ### OBS
 There's a websocket server connected to the OBS' one. You can change scenes and do other stuff straight from the deck view.
+
+## Extras
+### OCR
+There's a simple draft OCR implementation with `tesseract.js`. It grabs a frame from an OBS source (or scene) and just rawdoggs it and spits out garbage.  
+I had hoped to use it to get live stats from Mario Kart for an overlay, but now I think that should be an external project. Leaving the draft in code, who knows, maybe it will come in handy.
