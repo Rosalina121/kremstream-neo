@@ -80,7 +80,7 @@ This is a direct port of the Sims 2 overlay from the `krem-bun`.
 Essentially recreates The Sims 2 UI, where new messages are notifications, and follows dialog popups. Has a functional clock (weekdays are in Polish, but you can easily swap them).
 
 I've rewritten the animation handling, and now it's making use of the follow queue. The cash label is unused, not sure what to put there. Used to show now playing song, but I'm not planning on
-including that here for now.
+including that here for now (disregard it being shown on the gif below, i just copied it from `krem-bun` lol).
 
 ![Sims 2](readme-assets/sims2.gif)
 
@@ -90,5 +90,5 @@ There's a websocket server connected to the OBS' one. You can change scenes and 
 
 ## Extras
 ### OCR
-There's a simple draft OCR implementation with `tesseract.js`. It grabs a frame from an OBS source (or scene) and just rawdoggs it and spits out garbage.  
+There's a simple draft OCR implementation with `tesseract.js`. It grabs a frame from an OBS source (or scene) and just rawdoggs it and spits out garbage.
 I had hoped to use it to get live stats from Mario Kart for an overlay, but now I think that should be an external project. Leaving the draft in code, who knows, maybe it will come in handy.
