@@ -75,6 +75,15 @@ just like in the Switch 2 OS UI. Buttons are defined in a simple array, includin
 
 The camera cutout has a dirty hacky CSS so that the transparency can be a rounded rectangle, yet still have this nice gradient moving border. It's ugly, it's rough, and frankly I'm surprised that OBS browser source handles it well.
 
+### Sims 2
+This is a direct port of the Sims 2 overlay from the `krem-bun`.
+Essentially recreates The Sims 2 UI, where new messages are notifications, and follows dialog popups. Has a functional clock (weekdays are in Polish, but you can easily swap them).
+
+I've rewritten the animation handling, and now it's making use of the follow queue. The cash label is unused, not sure what to put there. Used to show now playing song, but I'm not planning on
+including that here for now.
+
+![Sims 2](readme-assets/sims2.gif)
+
 ## External programs
 ### OBS
 There's a websocket server connected to the OBS' one. You can change scenes and do other stuff straight from the deck view.
