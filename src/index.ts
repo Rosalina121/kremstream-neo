@@ -23,6 +23,13 @@ app.ws("/ws", {
                 const json = JSON.stringify({ type: "toggleDarkMode" });
                 for (const ws of wsClients) ws.send(json);
             }
+            if (data.data.subType === "pause") {
+                const json = JSON.stringify({ type: "togglePause" });
+                for (const ws of wsClients) ws.send(json);
+                setTimeout(() => {
+                    obsClient.toggleFilterEnabled("Freeze")    // checks the active scene, and toggles the filter on scene "<SceneName> Grouped"
+                }, 100)
+            }
         }
         if (data.type === "obs") {
             if (data.data.subType === "scene") {

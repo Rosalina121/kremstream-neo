@@ -64,10 +64,7 @@ Overlays are generally a separate, self-contained React apps,
 that communicate with the server via a websocket.
 Most just receive follows, chats and chat deletes, plus some overlay-specific messages (like a dark mode toggle).
 
-Currently there's a single overlay by default - Switch 2
-
-Following is/will be a breakdown of overlay-specific things, and stuff
-that stands out from the general functionality.
+Following is/will be a breakdown of overlay-specific things, and stuff that stands out from the general functionality.
 
 ### Switch 2
 Overlay checks if the incoming messages contain `!L` or `!R` (case-insensitive) and move the cursor between "buttons" on the UI,
@@ -80,9 +77,19 @@ This is a direct port of the Sims 2 overlay from the `krem-bun`.
 Essentially recreates The Sims 2 UI, where new messages are notifications, and follows dialog popups. Has a functional clock (weekdays are in Polish, but you can easily swap them).
 
 I've rewritten the animation handling, and now it's making use of the follow queue. The cash label is unused, not sure what to put there. Used to show now playing song, but I'm not planning on
-including that here for now (disregard it being shown on the gif below, i just copied it from `krem-bun` lol).
+including that here for now.
 
-![Sims 2](readme-assets/sims2.gif)
+This also has a pause screen that looks exactly like the game one. Additionally, there's also a logic that will pause the
+stream scene as well in OBS. This requires:
+- [OBS Freeze filter](https://github.com/exeldro/obs-freeze-filter)
+- Your scene to have a top-level group named `<SceneName> Grouped`, so if my scene is named "OV Sims2" it contains "OV Sims2 Grouped".
+This grouped scene then has the Freeze filter on it and includes all the sources.
+
+If this doesn't work for your setup, you can adapt what the request send to the OBS websocket,
+or just comment it out. Websocket handler has, well, no error handling so if something goes wrong
+the whole app crashes lol.
+
+![Sims 2](readme-assets/sims2.png)
 
 ## External programs
 ### OBS
@@ -92,3 +99,8 @@ There's a websocket server connected to the OBS' one. You can change scenes and 
 ### OCR
 There's a simple draft OCR implementation with `tesseract.js`. It grabs a frame from an OBS source (or scene) and just rawdoggs it and spits out garbage.
 I had hoped to use it to get live stats from Mario Kart for an overlay, but now I think that should be an external project. Leaving the draft in code, who knows, maybe it will come in handy.
+
+## TODOs and WIPs
+- [ ] Error handling for OBS requests
+  - [ ] checks if scenes are valid
+  - [ ] don't crash everything on tiny errors

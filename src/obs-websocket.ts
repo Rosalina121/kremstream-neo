@@ -155,6 +155,21 @@ export class OBSWebSocket {
         return this.sendRequest("SetCurrentProgramScene", { sceneName: sceneName });
     }
 
+    toggleFilterEnabled(filterName: string): void {
+        this.sendRequest("GetCurrentProgramScene")
+            .then((response) => {
+                const sourceName = response.responseData.sceneName + " Grouped";
+                this.sendRequest("GetSourceFilter", { sourceName, filterName })
+                    .then((response) => {
+                        this.setFilterEnabled(filterName, sourceName, !response.responseData.filterEnabled);
+                    });
+            });
+    }
+
+    setFilterEnabled(filterName: string, sourceName: string, filterEnabled: boolean): Promise<void> {
+        return this.sendRequest("SetSourceFilterEnabled", { sourceName, filterName, filterEnabled });
+    }
+
     // draft to have live stats from mk to show in overlay or sth
     // async getSourceScreenshot(
     //     sourceName: string,

@@ -2,12 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { useIsOverflow } from "./components/isOverflow";
 
-// icons
-import { SlSocialSoundcloud } from "react-icons/sl";
-import { RiGithubLine } from "react-icons/ri";
-import { FiYoutube } from "react-icons/fi";
-import { TbGenderTransgender } from "react-icons/tb";
-import { LuNewspaper } from "react-icons/lu";
+import { GrPauseFill } from "react-icons/gr";
 
 import sims2UI from './assets/sims2hud.png'
 
@@ -25,48 +20,15 @@ type Follow = {
   profilePic: string;
 };
 
-type BarButton = {
-  icon: React.ReactNode;
-  highlightText: string;
-  idx: number;
-}
-
-const barButtons: BarButton[] = [
-  {
-    icon: <FiYoutube className="text-5xl text-red-600" />,
-    highlightText: "youtube.com/@alina_rosa",
-    idx: 1,
-  },
-  {
-    icon: <RiGithubLine className="text-5xl text-gray-500" />,
-    highlightText: "github.com/rosalina121",
-    idx: 2,
-  },
-  {
-    icon: <SlSocialSoundcloud className="text-[3.25rem] text-orange-500" />,
-    highlightText: "soundcloud.com/rosalina121",
-    idx: 3,
-  },
-  {
-    icon: <LuNewspaper className="text-5xl text-purple-600" />,
-    highlightText: "dupa.gay",
-    idx: 4,
-  },
-  {
-    icon: <TbGenderTransgender className="text-5xl text-pink-500" />,
-    highlightText: "Human rights",
-    idx: 5,
-  },
-
-];
 
 
 export default function App() {
   const [messages, setMessages] = useState<ChatMsg[]>([]);
-  const [currentHighlight, setCurrentHighlight] = useState(1);
   const [latestFollow, setLatestFollow] = useState<Follow | null>(null);
   const [followQueue, setFollowQueue] = useState<Follow[]>([]);
   const followTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const [isPaused, setIsPaused] = useState(false);
 
   const [currentTime, setCurrentTime] = useState('');
 
@@ -93,7 +55,7 @@ export default function App() {
       const msg = JSON.parse(event.data);
       if (msg.type === "chat") {
         // technically speaking the following ops are not atomic per se,
-        // as in, if some message hops in between the wrong message will be removed from
+        // as in, if some message hops in between, the wrong message will be removed from
         // the chat, but it's a 1ms window, so unless you're a top 5 twitch streamer
         // you can consider it atomic enough lol
         setMessages((prev) => [...prev, msg.data]);
@@ -101,15 +63,6 @@ export default function App() {
           msg.data.entering = true;
           setMessages((prev) => [...prev.slice(0, -1), msg.data]);
         }, 1);
-        if (msg.data.text.toUpperCase().includes("!L")) {
-          setCurrentHighlight((prev) =>
-            prev - 1 < 0 ? barButtons.length : prev - 1
-          );  // ternary coz % is a remainder op, not modulo, negative numbers etc. etc.
-        }
-        if (msg.data.text.toUpperCase().includes("!R")) {
-          setCurrentHighlight((prev) => (prev + 1) % (barButtons.length + 1));
-        }
-        console.log("Current Highlight:", currentHighlight);
       }
       if (msg.type === "chatDelete") {
         setMessages((prev) => prev.filter((m) => m.id !== msg.data.id));
@@ -125,6 +78,9 @@ export default function App() {
         } else {
           setFollowQueue((prev) => [...prev, msg.data]);
         }
+      }
+      if (msg.type === "togglePause") {
+        setIsPaused((prev) => !prev);
       }
     };
     return () => ws.close();
@@ -310,6 +266,15 @@ export default function App() {
       {/* Right side background */}
       {/* Change to bg-slate-500 or something, by default transaprent */}
       <div className="bg-transparent h-screen aspect-[4/3]"></div>
+
+      {/* Pause overlay */}
+      {isPaused && (
+        <div className="absolute top-0 left-0 w-full h-full border-8 border-red-500 rounded-4xl">
+          <div className="-translate-x-2 -translate-y-2 w-16 h-16 border-8 border-red-500 rounded-full flex items-center justify-center">
+            <GrPauseFill className="text-red-500 text-3xl" />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
