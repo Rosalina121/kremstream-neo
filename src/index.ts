@@ -124,6 +124,13 @@ app.use(
 );
 app.use(
     serveStatic({
+        prefix: "/overlay/sims2wait",
+        assets: join(process.cwd(), "overlays/sims2wait/dist").toString(),
+        alwaysStatic: true,
+    }),
+);
+app.use(
+    serveStatic({
         prefix: "/admin/deck",
         assets: join(process.cwd(), "admin/deck/dist").toString(),
         alwaysStatic: true,

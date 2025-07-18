@@ -91,6 +91,17 @@ the whole app crashes lol.
 
 ![Sims 2](readme-assets/sims2.png)
 
+## Waits
+
+Additionally to stream overlays we've also got some wait screens matching above overlays.
+
+### Sims 2 Wait
+
+Based on the loading screen from Sims 2. Surprisingly... it's all React and janky-ass CSS. Modifying may prove to be a challenge, but you can easily swap icons (kept as `react-icons`), text and the portrait. It's also, just like others, hardcoded for 1080p. In this case adapting for other resolutions would require tinkering with the 3D transform and grid layout. Just FYI.
+
+![Sims 2 Wait](readme-assets/sims2wait.gif)
+
+
 ## External programs
 ### OBS
 There's a websocket server connected to the OBS' one. You can change scenes and do other stuff straight from the deck view.
