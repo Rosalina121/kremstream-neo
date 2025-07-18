@@ -7,10 +7,11 @@
   },
   "scripts": {
     "start": "bun src/index.ts",
+    "build:overlay:sims2wait": "cd overlays/sims2wait && bun run build",
     "build:overlay:switch2": "cd overlays/switch2 && bun run build",
     "build:overlay:sims2": "cd overlays/sims2 && bun run build",
     "build:admin:deck": "cd admin/deck && bun run build",
-    "build:overlays": "bun run build:overlay:switch2 && bun run build:overlay:sims2 && bun run build:admin:deck",
+    "build:overlays": "bun run build:overlay:switch2 && bun run build:overlay:sims2 && bun run build:admin:deck && bun run build:overlay:sims2wait",
     "all": "bun run build:overlays && bun run start"
   },
   "peerDependencies": {
