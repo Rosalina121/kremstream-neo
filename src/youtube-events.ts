@@ -3,6 +3,7 @@ type YoutubeChatMessageEvent = {
     text: string;
     username: string;
     profilePic: string;
+    source: string;
 };
 
 type YoutubeMessageDeleteEvent = {
@@ -28,7 +29,7 @@ async function fetchLiveChatId(accessToken: string): Promise<string | null> {
     return data.items?.[0]?.snippet?.liveChatId ?? null;
 }
 
-const serverStartTime = Date.now();
+const seenMessageIds = new Set<string>();
 
 export function startYoutubeChatPolling(opts: StartOptions) {
     let nextPageToken: string | undefined = undefined;
@@ -50,9 +51,9 @@ export function startYoutubeChatPolling(opts: StartOptions) {
 
             for (const item of data.items ?? []) {
                 if (opts.onChatMessage && item.snippet.type === "textMessageEvent") {
-                    // Only process messages published after server startup
-                    const publishedAt = new Date(item.snippet.publishedAt).getTime();
-                    if (publishedAt < serverStartTime) continue;
+                    // yt really likes to send all the messages again several times when polling, so skip seen ones
+                    if (seenMessageIds.has(item.id)) continue;
+                    seenMessageIds.add(item.id);
 
                     // no need for profile pic cache as yt provides a URL in same response
                     opts.onChatMessage({
@@ -60,6 +61,7 @@ export function startYoutubeChatPolling(opts: StartOptions) {
                         text: item.snippet.displayMessage,
                         username: item.authorDetails.displayName,
                         profilePic: item.authorDetails.profileImageUrl,
+                        source: "youtube"
                     });
                 }
                 if (opts.onMessageDelete && item.snippet.type === "messageDeletedEvent") {
@@ -68,7 +70,7 @@ export function startYoutubeChatPolling(opts: StartOptions) {
                     })
                 }
             }
-            // Poll at the interval recommended by YouTube (default 2s)
+            // 2 sec poll
             await new Promise(res => setTimeout(res, data.pollingIntervalMillis ?? 2000));
         }
     }

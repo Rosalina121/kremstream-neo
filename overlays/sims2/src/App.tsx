@@ -5,6 +5,7 @@ import { useIsOverflow } from "./components/isOverflow";
 import { GrPauseFill } from "react-icons/gr";
 
 import sims2UI from './assets/sims2hud.png'
+import { FaTwitch, FaYoutube } from "react-icons/fa6";
 
 type ChatMsg = {
   id: string;
@@ -186,6 +187,11 @@ export default function App() {
                         style={{ boxShadow: "2px 2px 6px #000000dd" }}
 
                       >
+                        {message.source === "youtube" ?
+                          <FaYoutube className="absolute -left-[72px] -bottom-3 text-3xl text-red-600" />
+                          :
+                          <FaTwitch className="absolute -left-[72px] -bottom-3 text-3xl text-purple-800" />
+                        }
                         {/* Speech bubble tail */}
                         <div className="absolute -left-[15px] bottom-3 w-0 h-0
                           border-t-[10px] border-t-transparent

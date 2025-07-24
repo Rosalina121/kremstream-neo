@@ -32,6 +32,7 @@ type ChatMessageEvent = {
     username: string;
     color: string;
     profilePic: string;
+    source: string;
 };
 
 type MessageDeleteEvent = {
@@ -200,6 +201,7 @@ export function startTwitchEventWS(opts: StartOptions) {
                         username,
                         color,
                         profilePic,
+                        source: "twitch"
                     });
                 }
 

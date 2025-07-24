@@ -60,6 +60,12 @@ function handleChatMessage(msg: { id: string, text: string, username: string, co
     for (const ws of wsClients) ws.send(json);
 }
 
+function handleDeleteChatMessage(msg: { id: string }) {
+    const json = JSON.stringify({ type: "chatDelete", data: msg });
+    console.log(msg)
+    for (const ws of wsClients) ws.send(json);
+}
+
 async function initializeChatAndModules() {
     if (chatInitialized) return;
     if (chatInitPromise) return chatInitPromise;

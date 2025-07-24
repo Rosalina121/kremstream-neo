@@ -91,7 +91,7 @@ The camera cutout has a dirty hacky CSS so that the transparency can be a rounde
 
 ### Sims 2
 This is a direct port of the Sims 2 overlay from the `krem-bun`.
-Essentially recreates The Sims 2 UI, where new messages are notifications, and follows dialog popups. Has a functional clock (weekdays are in Polish, but you can easily swap them).
+Essentially recreates The Sims 2 UI, where new messages are notifications, and follows dialog popups. Has a functional clock (weekdays are in Polish, but you can easily swap them). Also shows the source of the message (currently only YouTube and Twitch)
 
 I've rewritten the animation handling, and now it's making use of the follow queue. The cash label is unused, not sure what to put there. Used to show now playing song, but I'm not planning on
 including that here for now.
@@ -107,6 +107,7 @@ or just comment it out. Websocket handler has, well, no error handling so if som
 the whole app crashes lol.
 
 ![Sims 2](readme-assets/sims2.png)
+![Sims 2 message sources](readme-assets/sims2sources.png)
 
 ## Waits
 
