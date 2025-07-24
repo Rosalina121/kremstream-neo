@@ -38,6 +38,9 @@ app.ws("/ws", {
                 obsClient.setCurrentProgramScene(data.data.sceneName);
             }
         }
+        if (data.type === "chat") {
+            console.log("this is a test for joint chat handler", data.data)
+        }
     }
 });
 
@@ -47,6 +50,15 @@ obsClient.connect();
 
 let chatInitialized = false;
 let chatInitPromise: Promise<void> | null = null;   // ugly, may fix later
+
+function handleChatMessage(msg: { id: string, text: string, username: string, color?: string, profilePic: string }) {
+    const json = JSON.stringify({ type: "chat", data: msg });
+    console.log(msg);
+    if (msg.text.includes("!pipe")) {
+        playPipe();
+    }
+    for (const ws of wsClients) ws.send(json);
+}
 
 async function initializeChatAndModules() {
     if (chatInitialized) return;
@@ -88,15 +100,7 @@ async function initializeChatAndModules() {
                     console.log(msg);
                     for (const ws of wsClients) ws.send(msg);
                 },
-                onChatMessage: (msg) => {
-                    const json = JSON.stringify({ type: "chat", data: msg });
-                    console.log(msg)
-                    if (msg.text.includes("!pipe")) {
-                        // obsClient.getSourceScreenshot("HD60 X", "test.png", "png", 1920, 1080)
-                        playPipe()
-                    }
-                    for (const ws of wsClients) ws.send(json);
-                },
+                onChatMessage: handleChatMessage,
                 onMessageDelete: (msg) => {
                     const json = JSON.stringify({ type: "chatDelete", data: msg });
                     console.log(msg)
@@ -132,11 +136,7 @@ async function initializeYoutubeChat() {
             startYoutubeChatPolling({
                 accessToken: tokens.access_token,
                 liveChatId,
-                onChatMessage: (msg) => {
-                    const json = JSON.stringify({ type: "chat", data: msg });
-                    console.log("chat msg from yt:", json)
-                    for (const ws of wsClients) ws.send(json);
-                },
+                onChatMessage: handleChatMessage,
             });
             console.log("YouTube chat events initialized.");
         }
@@ -175,15 +175,24 @@ app.use(
     }),
 )
 
+// TODO: add switch to disable either yt or twitch
+// currently yt relies on twitch kinda being loaded before
 app.listen(3000, async () => {
-    const tokens = await loadTokens();
-    if (tokens) {
-        console.log("Access token loaded:", tokens.access_token);
+    const twTokens = await loadTokens();
+    if (twTokens) {
+        console.log("Twitch token loaded.");
         await initializeChatAndModules();
+        const ytTokens = await loadYoutubeTokens();
+        if (ytTokens) {
+            console.log("YouTube token loaded.")
+            await initializeYoutubeChat();
+        } else {
+            console.log("No YouTube tokens found. Visit http://localhost:3000/auth/youtube to authorize.")
+        }
+
     } else {
-        console.log("No tokens found. Visit http://localhost:3000/auth/twitch to authorize.");
+        console.log("No Twitch tokens found. Visit http://localhost:3000/auth/twitch to authorize.");
     }
-    console.log("Youtube oauth: http://localhost:3000/auth/youtube")
     console.log("Server running at http://localhost:3000");
 });
 

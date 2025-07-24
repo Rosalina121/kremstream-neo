@@ -13,6 +13,7 @@ type ChatMsg = {
   color: string;
   profilePic: string;
   entering?: boolean;
+  source?: string;  // youtube, twitch
 };
 
 type Follow = {
