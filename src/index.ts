@@ -6,6 +6,8 @@ import { join } from "path";
 import { startTwitchEventWS } from "./twitch-events";
 import { playPipe } from "./eastereggs";
 import { OBSWebSocket } from "./obs-websocket";
+import { registerYoutubeOAuth, loadYoutubeTokens } from "./youtube-oauth";
+import { startYoutubeChatPolling, fetchLiveChatId } from "./youtube-events";
 
 const app = new Elysia();
 const wsClients = new Set<WebSocket>();
@@ -39,6 +41,7 @@ app.ws("/ws", {
     }
 });
 
+// twitch
 registerTwitchOAuth(app);
 obsClient.connect();
 
@@ -89,8 +92,8 @@ async function initializeChatAndModules() {
                     const json = JSON.stringify({ type: "chat", data: msg });
                     console.log(msg)
                     if (msg.text.includes("!pipe")) {
-                        obsClient.getSourceScreenshot("HD60 X", "test.png", "png", 1920, 1080)
-                        // playPipe()
+                        // obsClient.getSourceScreenshot("HD60 X", "test.png", "png", 1920, 1080)
+                        playPipe()
                     }
                     for (const ws of wsClients) ws.send(json);
                 },
@@ -105,6 +108,41 @@ async function initializeChatAndModules() {
     })();
 
     await chatInitPromise;
+}
+
+// youtube
+registerYoutubeOAuth(app);
+
+let youtubeChatInitialized = false;
+let youtubeChatInitPromise: Promise<void> | null = null;
+
+async function initializeYoutubeChat() {
+    if (youtubeChatInitialized) return;
+    if (youtubeChatInitPromise) return youtubeChatInitPromise;
+
+    youtubeChatInitPromise = (async () => {
+        const tokens = await loadYoutubeTokens();
+        if (tokens) {
+            const liveChatId = await fetchLiveChatId(tokens.access_token);
+            if (!liveChatId) {
+                console.log("No active YouTube live chat found.");
+                return;
+            }
+            youtubeChatInitialized = true;
+            startYoutubeChatPolling({
+                accessToken: tokens.access_token,
+                liveChatId,
+                onChatMessage: (msg) => {
+                    const json = JSON.stringify({ type: "chat", data: msg });
+                    console.log("chat msg from yt:", json)
+                    for (const ws of wsClients) ws.send(json);
+                },
+            });
+            console.log("YouTube chat events initialized.");
+        }
+    })();
+
+    await youtubeChatInitPromise;
 }
 
 // serve overlays
@@ -145,6 +183,7 @@ app.listen(3000, async () => {
     } else {
         console.log("No tokens found. Visit http://localhost:3000/auth/twitch to authorize.");
     }
+    console.log("Youtube oauth: http://localhost:3000/auth/youtube")
     console.log("Server running at http://localhost:3000");
 });
 
@@ -152,4 +191,8 @@ app.listen(3000, async () => {
 tokenEvents.on("tokenReady", () => {
     console.log("Token obtained via OAuth! Initializing chat...");
     initializeChatAndModules();
+});
+tokenEvents.on("youtubeTokenReady", () => {
+    console.log("YouTube Token obtained via OAuth! Initializing chat...");
+    initializeYoutubeChat();
 });

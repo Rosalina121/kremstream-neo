@@ -182,6 +182,9 @@ twitch_chat_cache.json
 src/sounds/*
 # tesseract
 *.traineddata
+# YouTube
+youtube_tokens.json
+youtube_chat_cache.json
 
 # KDE Dolphin colored folders
 .directory

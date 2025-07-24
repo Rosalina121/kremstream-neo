@@ -10,6 +10,7 @@ import kremImg from './assets/kremsimsshadow.png'
 import { FaHeart, FaMoneyCheckAlt, FaTwitch } from "react-icons/fa";
 import { IoMdPlanet } from "react-icons/io";
 import { BsFillGiftFill, BsNintendoSwitch } from "react-icons/bs";
+import type { IconType } from "react-icons";
 
 // At the top level, modify how we store icons - store just the component type instead of the rendered component
 const iconComponents = [
@@ -229,7 +230,7 @@ export default function App() {
   )
 }
 
-function ImageSquare({ on = false, icon: Icon }: { on?: boolean, icon?: typeof FaGamepad }) {
+function ImageSquare({ on = false, icon: Icon }: { on?: boolean, icon?: IconType }) {
   const styleOff = `border-[#3C6D95]`
   const styleOn = `border-[#0A3F69]`
   const styleBgOff = ` bg-[#0A3F69]/70 `

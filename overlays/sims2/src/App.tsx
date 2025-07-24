@@ -218,7 +218,8 @@ export default function App() {
               className={`whitespace-nowrap`}
             // ${shouldScroll ? 'scrolling-text' : ''}`}
             >
-              <span className="px-4">§ 0</span>
+              {/* uncomment below to set cash, I use this space for audio visualizer for now */}
+              {/* <span className="px-4">§ 0</span> */}
               {/* {shouldScroll && <span className="px-4">{song}</span>} */}
             </div>
           </div>
