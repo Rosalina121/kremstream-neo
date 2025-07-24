@@ -25,9 +25,20 @@ bun start
 ```
 
 ## Required setup
+### Twitch
 You'll need to create an app in [Twitch Dev Console](https://dev.twitch.tv/console/apps).
 
 This works via OAuth, so make sure to match the callback uri. Default port is 3000, so callback can be like `http://localhost:3000/auth/callback`.
+
+### YouTube
+May Sundar Pichai have mercy on your soul. 
+
+- Go to [Google Cloud Console](https://console.cloud.google.com/)
+- Create new project
+- Enable YouTube Data API v3
+- Create OAuth 2.0 credentials (choose Web application)
+  - make sure to select the YouTube Data API v3 scopes, not sure which exactly are needed, but readonly ones should be enough
+- Set redirect URI to the same one as in `.env`
 
 This, and stuff like secrets and ids are to be stored in a `.env` file. Create one with following props:
 
@@ -36,6 +47,11 @@ TWITCH_CLIENT_ID=your_client_id
 TWITCH_CLIENT_SECRET=your_client_secret
 TWITCH_REDIRECT_URI=http://localhost:3000/auth/callback
 TWITCH_USER_ID=your_user_id
+
+YOUTUBE_CLIENT_ID=your_youtube_client_id
+YOUTUBE_CLIENT_SECRET=your_youtube_client_secret
+YOUTUBE_REDIRECT_URI=http://localhost:3000/auth/callback
+
 OBS_WS_PASSWORD=obs_websocket_password
 ```
 All are self explanatory. You can find your user_id via a simple API call, or just any website that offers that.
@@ -46,6 +62,7 @@ Technically chat can work well without OAuth, or any auth for that matter (see [
 ## Server
 On the server side of things there's a websocket handling all communications, currently between:
 - Twitch API websocket
+- YouTube events
 - Admin views
 - Overlays
 - Easter eggs
