@@ -5,7 +5,7 @@ import { useIsOverflow } from "./components/isOverflow";
 // icons
 import { FaHeart, FaTwitch, FaYoutube } from "react-icons/fa6";
 import { SlSocialSoundcloud } from "react-icons/sl";
-import { RiGithubLine } from "react-icons/ri";
+import { RiBlueskyLine, RiGithubLine } from "react-icons/ri";
 import { FiYoutube } from "react-icons/fi";
 import { TbGenderTransgender } from "react-icons/tb";
 import { LuNewspaper } from "react-icons/lu";
@@ -83,24 +83,29 @@ const barButtons: BarButton[] = [
     idx: 1,
   },
   {
+    icon: <RiBlueskyLine className="text-5xl text-blue-500" />,
+    highlightText: "bsky.com/profile/dupa.gay",
+    idx: 2,
+  },
+  {
     icon: <RiGithubLine className="text-5xl text-gray-500" />,
     highlightText: "github.com/rosalina121",
-    idx: 2,
+    idx: 3,
   },
   {
     icon: <SlSocialSoundcloud className="text-[3.25rem] text-orange-500" />,
     highlightText: "soundcloud.com/rosalina121",
-    idx: 3,
+    idx: 4,
   },
   {
     icon: <LuNewspaper className="text-5xl text-purple-600" />,
     highlightText: "dupa.gay",
-    idx: 4,
+    idx: 5,
   },
   {
     icon: <TbGenderTransgender className="text-5xl text-pink-500" />,
     highlightText: "Human rights",
-    idx: 5,
+    idx: 6,
   },
 
 ];
