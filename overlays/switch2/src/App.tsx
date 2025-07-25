@@ -3,7 +3,7 @@ import "./App.css";
 import { useIsOverflow } from "./components/isOverflow";
 
 // icons
-import { FaHeart } from "react-icons/fa6";
+import { FaHeart, FaTwitch, FaYoutube } from "react-icons/fa6";
 import { SlSocialSoundcloud } from "react-icons/sl";
 import { RiGithubLine } from "react-icons/ri";
 import { FiYoutube } from "react-icons/fi";
@@ -62,6 +62,7 @@ type ChatMsg = {
   username: string;
   color: string;
   profilePic: string;
+  source?: string;
 };
 
 type Follow = {
@@ -196,8 +197,15 @@ export default function App() {
                 <img src={msg.profilePic} alt="" />
               </div>
               <div className="flex flex-col flex-3">
-                <span className="text-2xl" style={{ color: palette.messageSender }}>{msg.username}</span>
-                <span className="break-normal" style={{ color: palette.messageText }}>{msg.text}</span>
+                <span className="text-2xl" style={{ color: palette.messageSender }}>
+                  {msg.source === "youtube" ?
+                    <FaYoutube className="inline text-2xl text-red-600 mr-1 -translate-y-0.5" />
+                    :
+                    <FaTwitch className="inline text-2xl text-purple-700 mr-1" />
+                  }
+                  {msg.username}
+                </span>
+                <span className="break-normal" style={{ color: palette.messageText }} dangerouslySetInnerHTML={{ __html: msg.text }}></span>
               </div>
             </div>
           ))}
@@ -251,7 +259,6 @@ export default function App() {
                     // jesus the depths of stackoverflow i had to rummage through to find this fuck
                   }}
                 >
-                  {/* Optionally, you can add a border or highlight for the cam box here */}
                 </div>
               </div>
             </div>

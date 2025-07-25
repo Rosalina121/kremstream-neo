@@ -11,3 +11,7 @@
     font-weight: bold;
     font-style: normal;
 }
+
+.emote {
+    display: inline;
+}

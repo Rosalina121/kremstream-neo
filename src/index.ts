@@ -8,6 +8,14 @@ import { playPipe } from "./eastereggs";
 import { OBSWebSocket } from "./obs-websocket";
 import { registerYoutubeOAuth, loadYoutubeTokens } from "./youtube-oauth";
 import { startYoutubeChatPolling, fetchLiveChatId } from "./youtube-events";
+import TwitchEmoticons from '@mkody/twitch-emoticons';
+const { EmoteFetcher, EmoteParser } = TwitchEmoticons;
+
+const fetcher = new EmoteFetcher(process.env.TWITCH_CLIENT_ID, process.env.TWITCH_CLIENT_SECRET)
+const parser = new EmoteParser(fetcher, {
+    template: '<img class="emote" alt="{name}" src="{link}">',
+    match: /(\w+)+?/g
+})
 
 const app = new Elysia();
 const wsClients = new Set<WebSocket>();
@@ -38,9 +46,6 @@ app.ws("/ws", {
                 obsClient.setCurrentProgramScene(data.data.sceneName);
             }
         }
-        if (data.type === "chat") {
-            console.log("this is a test for joint chat handler", data.data)
-        }
     }
 });
 
@@ -52,12 +57,29 @@ let chatInitialized = false;
 let chatInitPromise: Promise<void> | null = null;   // ugly, may fix later
 
 function handleChatMessage(msg: { id: string, text: string, username: string, color?: string, profilePic: string }) {
-    const json = JSON.stringify({ type: "chat", data: msg });
-    console.log(msg);
-    if (msg.text.includes("!pipe")) {
-        playPipe();
-    }
-    for (const ws of wsClients) ws.send(json);
+    Promise.all([
+        // Twitch global
+        fetcher.fetchTwitchEmotes(),
+        // BTTV global
+        fetcher.fetchBTTVEmotes(),
+        // 7TV global
+        fetcher.fetchSevenTVEmotes(),
+        // FFZ global
+        fetcher.fetchFFZEmotes(),
+    ]).then(() => {
+        msg.text = parser.parse(msg.text);
+        const json = JSON.stringify({ type: "chat", data: msg });
+        console.log(msg);
+
+        for (const ws of wsClients) ws.send(json);
+
+        if (msg.text.includes("!pipe")) {
+            playPipe();
+        }
+    }).catch(err => {
+        console.error('Error loading emotes...');
+        console.error(err);
+    });
 }
 
 function handleDeleteChatMessage(msg: { id: string }) {
