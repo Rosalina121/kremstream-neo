@@ -79,6 +79,9 @@ Planned (to bring it up to speed compared to `krem-bun`):
 ## Chat Emotes
 By default all chat messages are parsed for any global Twitch, 7TV, BetterTTV and FrankerZ Emotes. You could also add in channel specific ones by adapting the fetcher calls. This includes also messages from YouTube, so YT chat can use Twitch emotes (tho it will be only seen on the overlay). No YT emotes support for now, yet.
 
+*Note:* Sometimes animated emotes may not show instantly, or even time-out. This seems to be
+a Twitch CDN issue, as it randomly loads fast or doesn't at all. On tech side this seems to only happen when using the `default` URL path rather than `animated` one, but I'm not sure how to check if an emote is animated and force it. May be done on the library level perhaps, but as per docs, default **should** work fine (even though it doesn't). your mileage may vary.
+
 ## Overlays
 Overlays are generally a separate, self-contained React apps,
 that communicate with the server via a websocket.
