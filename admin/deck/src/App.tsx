@@ -11,7 +11,7 @@ export default function App() {
   const wsRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:3000/ws");
+    const ws = new WebSocket("ws://192.168.0.102:3000/ws");
     wsRef.current = ws;
     return () => {
       ws.close();
