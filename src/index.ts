@@ -9,6 +9,7 @@ import { OBSWebSocket } from "./obs-websocket";
 import { registerYoutubeOAuth, loadYoutubeTokens } from "./youtube-oauth";
 import { startYoutubeChatPolling, fetchLiveChatId } from "./youtube-events";
 import TwitchEmoticons from '@mkody/twitch-emoticons';
+import { initVnyan, sendToVnyan } from "./vnyan-int";
 const { EmoteFetcher, EmoteParser } = TwitchEmoticons;
 
 const fetcher = new EmoteFetcher(process.env.TWITCH_CLIENT_ID, process.env.TWITCH_CLIENT_SECRET)
@@ -21,6 +22,8 @@ const app = new Elysia();
 const wsClients = new Set<WebSocket>();
 
 const obsClient = new OBSWebSocket();
+
+initVnyan();
 
 app.ws("/ws", {
     open(ws) { wsClients.add(ws); },
@@ -44,6 +47,11 @@ app.ws("/ws", {
         if (data.type === "obs") {
             if (data.data.subType === "scene") {
                 obsClient.setCurrentProgramScene(data.data.sceneName);
+            }
+        }
+        if (data.type === "vnyan") {
+            if (data.data.subType === "reset") {
+                sendToVnyan("reset");
             }
         }
     }
@@ -209,7 +217,10 @@ app.use(
 
 // TODO: add switch to disable either yt or twitch
 // currently yt relies on twitch kinda being loaded before
-app.listen(3000, async () => {
+app.listen({
+    hostname: "0.0.0.0",
+    port: 3000
+}, async () => {
     const twTokens = await loadTokens();
     if (twTokens) {
         console.log("Twitch token loaded.");

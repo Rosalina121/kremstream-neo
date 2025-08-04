@@ -30,6 +30,12 @@ export default function App() {
       wsRef.current.send(JSON.stringify({ type: "overlay", data: { subType: "pause" } }));
     }
   }
+  function handleVnyanResetClick() {
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      console.log("vnyan reset pos");
+      wsRef.current.send(JSON.stringify({ type: "vnyan", data: { subType: "reset" } }));
+    }
+  }
 
   return (
     <div className="flex items-center justify-center w-screen h-screen">
@@ -44,8 +50,9 @@ export default function App() {
           onClick={handlePauseClick}>
           Pause
         </div>
-        <div className="bg-gray-300 aspect-square rounded-3xl flex items-end justify-center p-8 text-4xl font-bold text-shadow-lg text-white">
-          Dupa
+        <div className="bg-gray-300 aspect-square rounded-3xl flex items-end justify-center p-8 text-4xl font-bold text-shadow-lg text-white"
+          onClick={handleVnyanResetClick}>
+          Reset Pos
         </div>
         <div className="bg-gray-300 aspect-square rounded-3xl flex items-end justify-center p-8 text-4xl font-bold text-shadow-lg text-white">
           Dupa

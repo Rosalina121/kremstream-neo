@@ -130,6 +130,10 @@ Based on the loading screen from Sims 2. Surprisingly... it's all React and jank
 ### OBS
 There's a websocket server connected to the OBS' one. You can change scenes and do other stuff straight from the deck view.
 
+### VNyan
+A connection to the VNyan websocket is made. You need to create a graph in there that listens on stuff. Right now for example I have a "reset pos" button on Deck that sends a message that calls the websocket and resets the avatar position in VNyan. It's pretty basic so far, but personally I don't have more uses for that.
+
+
 ## Extras
 ### OCR
 There's a simple draft OCR implementation with `tesseract.js`. It grabs a frame from an OBS source (or scene) and just rawdoggs it and spits out garbage.
