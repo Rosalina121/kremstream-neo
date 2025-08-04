@@ -187,9 +187,10 @@ export default function App() {
                         style={{ boxShadow: "2px 2px 6px #000000dd" }}
 
                       >
-                        {message.source === "youtube" ?
+                        {message.source === "youtube" &&
                           <FaYoutube className="absolute -left-[72px] -bottom-3 text-3xl text-red-600" />
-                          :
+                        }
+                        {message.source === "twitch" &&
                           <FaTwitch className="absolute -left-[72px] -bottom-3 text-3xl text-purple-800" />
                         }
                         {/* Speech bubble tail */}

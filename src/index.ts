@@ -56,7 +56,7 @@ obsClient.connect();
 let chatInitialized = false;
 let chatInitPromise: Promise<void> | null = null;   // ugly, may fix later
 
-function handleChatMessage(msg: { id: string, text: string, username: string, color?: string, profilePic: string }) {
+function handleChatMessage(msg: { id: string, text: string, username: string, color?: string, profilePic: string, source?: string }) {
     Promise.all([
         // Twitch global
         fetcher.fetchTwitchEmotes(),
@@ -68,9 +68,13 @@ function handleChatMessage(msg: { id: string, text: string, username: string, co
         fetcher.fetchFFZEmotes(),
     ]).then(() => {
         msg.text = parser.parse(msg.text);
+        
+        // comment the following line to enable marking if message is from twitch or youtube
+        // this is a workaround in case you're using one or the other, at least until I split the two
+        msg.source = "";
+        
         const json = JSON.stringify({ type: "chat", data: msg });
         console.log(msg);
-
         for (const ws of wsClients) ws.send(json);
 
         if (msg.text.includes("!pipe")) {

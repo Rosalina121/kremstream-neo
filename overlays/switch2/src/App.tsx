@@ -203,9 +203,10 @@ export default function App() {
               </div>
               <div className="flex flex-col flex-3">
                 <span className="text-2xl" style={{ color: palette.messageSender }}>
-                  {msg.source === "youtube" ?
+                  {msg.source === "youtube" &&
                     <FaYoutube className="inline text-2xl text-red-600 mr-1 -translate-y-0.5" />
-                    :
+                  }
+                  {msg.source === "twitch" &&
                     <FaTwitch className="inline text-2xl text-purple-700 mr-1" />
                   }
                   {msg.username}
