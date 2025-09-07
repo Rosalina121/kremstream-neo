@@ -1,5 +1,6 @@
 import { Elysia } from "elysia";
 import { tokenEvents } from "./token-events";
+import { tokenManager } from "./token-manager";
 
 const CLIENT_ID = process.env.TWITCH_CLIENT_ID!;
 const CLIENT_SECRET = process.env.TWITCH_CLIENT_SECRET!;
@@ -40,6 +41,7 @@ export async function refreshTokens(tokens: Tokens): Promise<Tokens | null> {
         obtained_at: Date.now(),
     };
     await saveTokens(newTokens);
+    tokenManager.updateTokenState("twitch", newTokens);
     tokenEvents.emit("tokenReady");
     return newTokens;
 }
@@ -104,7 +106,8 @@ export function registerTwitchOAuth(app: Elysia) {
             obtained_at: Date.now(),
         };
         await saveTokens(tokens);
-        tokenEvents.emit("tokenReady"); // for init modules
+        tokenManager.updateTokenState("twitch", tokens);
+        tokenEvents.emit("tokenReady");
         console.log("OAuth complete! Access token:", tokens.access_token);
         return new Response(null, {
             status: 302,

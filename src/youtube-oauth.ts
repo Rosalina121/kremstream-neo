@@ -1,5 +1,6 @@
 import { Elysia } from "elysia";
 import { tokenEvents } from "./token-events";
+import { tokenManager } from "./token-manager";
 
 const CLIENT_ID = process.env.YOUTUBE_CLIENT_ID!;
 const CLIENT_SECRET = process.env.YOUTUBE_CLIENT_SECRET!;
@@ -40,6 +41,7 @@ export async function refreshYoutubeTokens(tokens: YoutubeTokens): Promise<Youtu
         obtained_at: Date.now(),
     };
     await saveYoutubeTokens(newTokens);
+    tokenManager.updateTokenState("youtube", newTokens);
     tokenEvents.emit("youtubeTokenReady");
     return newTokens;
 }
@@ -104,6 +106,7 @@ export function registerYoutubeOAuth(app: Elysia) {
             obtained_at: Date.now(),
         };
         await saveYoutubeTokens(tokens);
+        tokenManager.updateTokenState("youtube", tokens);
         tokenEvents.emit("youtubeTokenReady");
         console.log("YouTube OAuth complete! Access token:", tokens.access_token);
         return new Response(null, {

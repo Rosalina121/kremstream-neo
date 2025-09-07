@@ -1,6 +1,6 @@
 # kremstream-neo
 
-My new twitch overlay engine. Heavy work in progress.
+My new twitch overlay engine. Heavy work in progress, but already usable.
 Based on: [krem-bun](https://github.com/Rosalina121/krem-bun)
 
 This will work in similar way (same technologies duh), but will be more maintainable
@@ -31,7 +31,7 @@ You'll need to create an app in [Twitch Dev Console](https://dev.twitch.tv/conso
 This works via OAuth, so make sure to match the callback uri. Default port is 3000, so callback can be like `http://localhost:3000/auth/callback`.
 
 ### YouTube
-May Sundar Pichai have mercy on your soul. 
+May Sundar Pichai have mercy on your soul.
 
 - Go to [Google Cloud Console](https://console.cloud.google.com/)
 - Create new project
@@ -54,6 +54,8 @@ YOUTUBE_REDIRECT_URI=http://localhost:3000/auth/callback
 
 OBS_WS_PASSWORD=obs_websocket_password
 ```
+Note: if you're using either Twitch or YouTube, but not both, feel free to only add the vars you need (server automatically omits unused ones).
+
 All are self explanatory. You can find your user_id via a simple API call, or just any website that offers that.
 
 Technically chat can work well without OAuth, or any auth for that matter (see [tmi.js](https://tmijs.com/)), but here we're listening on a websocket that also provides follows and events like message_deleted, that AFAIK can only be listened on with OAuth, so that's why.
@@ -61,7 +63,7 @@ Technically chat can work well without OAuth, or any auth for that matter (see [
 # Usage
 ## Server
 On the server side of things there's a websocket handling all communications, currently between:
-- Twitch API websocket
+- Twitch events
 - YouTube events
 - Admin views
 - Overlays
@@ -72,15 +74,15 @@ Some flow examples:
 - Twitch API -> Server -> Easter eggs
 - Admin view -> Server -> Overlays
 
-Planned (to bring it up to speed compared to `krem-bun`):
-- OBS websocket API
-- VNyan websocket API
+In progress (to bring it up to speed compared to `krem-bun`):
+- OBS websocket API - semi functional, no abstractions but works (example with enabling a filter)
+- VNyan websocket API - already somewhat works, requires manual setup on VNyan side, example with resetting position
 
 ## Chat Emotes
 By default all chat messages are parsed for any global Twitch, 7TV, BetterTTV and FrankerZ Emotes. You could also add in channel specific ones by adapting the fetcher calls. This includes also messages from YouTube, so YT chat can use Twitch emotes (tho it will be only seen on the overlay). No YT emotes support for now, yet.
 
 *Note:* Sometimes animated emotes may not show instantly, or even time-out. This seems to be
-a Twitch CDN issue, as it randomly loads fast or doesn't at all. On tech side this seems to only happen when using the `default` URL path rather than `animated` one, but I'm not sure how to check if an emote is animated and force it. May be done on the library level perhaps, but as per docs, default **should** work fine (even though it doesn't). your mileage may vary.
+a Twitch CDN issue, as it randomly loads fast or doesn't at all. On tech side this seems to only happen when using the `default` URL path rather than `animated` one, but I'm not sure how to check if an emote is animated and force it. May be done on the library level perhaps, but as per docs, default **should** work fine (even though it doesn't). Your mileage may vary.
 
 ## Overlays
 Overlays are generally a separate, self-contained React apps,
@@ -97,7 +99,7 @@ The camera cutout has a dirty hacky CSS so that the transparency can be a rounde
 
 ### Sims 2
 This is a direct port of the Sims 2 overlay from the `krem-bun`.
-Essentially recreates The Sims 2 UI, where new messages are notifications, and follows dialog popups. Has a functional clock (weekdays are in Polish, but you can easily swap them). Also shows the source of the message (currently only YouTube and Twitch)
+Essentially recreates The Sims 2 UI, where new messages are notifications, and follows dialog popups. Has a functional clock (weekdays are in Polish, but you can easily swap them). Also shows the source of the message (YT/Twitch)
 
 I've rewritten the animation handling, and now it's making use of the follow queue. The cash label is unused, not sure what to put there. Used to show now playing song, but I'm not planning on
 including that here for now.
@@ -112,6 +114,11 @@ If this doesn't work for your setup, you can adapt what the request send to the 
 or just comment it out. Websocket handler has, well, no error handling so if something goes wrong
 the whole app crashes lol.
 
+#### Extra
+Under `/overlay/sims2ui` there is an extra html file that when used in a browser source can act as
+a background for other sources, or text or whatevs. It should look like a Sims 2 popup dialog. It's flexible, as in, the rounded corners stay the same regardless of its size, so you may want to tweak
+the browser source resolution.
+
 ![Sims 2](readme-assets/sims2.png)
 ![Sims 2 message sources](readme-assets/sims2sources.png)
 
@@ -125,21 +132,19 @@ Based on the loading screen from Sims 2. Surprisingly... it's all React and jank
 
 ![Sims 2 Wait](readme-assets/sims2wait.gif)
 
-
 ## External programs
 ### OBS
 There's a websocket server connected to the OBS' one. You can change scenes and do other stuff straight from the deck view.
 
 ### VNyan
-A connection to the VNyan websocket is made. You need to create a graph in there that listens on stuff. Right now for example I have a "reset pos" button on Deck that sends a message that calls the websocket and resets the avatar position in VNyan. It's pretty basic so far, but personally I don't have more uses for that.
-
+You need to create a graph in VNyan that listens on stuff. Right now for example I have a "reset pos" button on Deck that sends a message that calls the websocket and resets the avatar position in VNyan. It's pretty basic so far, but personally I don't have more uses for that.
 
 ## Extras
-### OCR
-There's a simple draft OCR implementation with `tesseract.js`. It grabs a frame from an OBS source (or scene) and just rawdoggs it and spits out garbage.
-I had hoped to use it to get live stats from Mario Kart for an overlay, but now I think that should be an external project. Leaving the draft in code, who knows, maybe it will come in handy.
+### Easter eggs
+In `eastereggs.ts` there is an example that plays the falling pipe mp3 through vlc (in cli mode) when an incoming message contains "!pipe".
 
 ## TODOs and WIPs
 - [ ] Error handling for OBS requests
   - [ ] checks if scenes are valid
   - [ ] don't crash everything on tiny errors
+- [ ] Cleanup unused code after Twitch/Youtube decoupling
