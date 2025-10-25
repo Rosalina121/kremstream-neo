@@ -35,7 +35,7 @@ export default function App() {
     const randomObject = array[Math.floor(Math.random() * array.length)];
     return randomObject;
   };
-  
+
   const [messages, setMessages] = useState<ChatMsg[]>([
     {
       id: "1",
@@ -117,7 +117,8 @@ export default function App() {
           <div key={index} className="bg-[#404846DD] h-fit text-white font-bold text-xl p-3 rounded-3xl w-full"
             style={{
               border: 'solid 3px #ffffff22',
-              outline: 'solid 4px #404846DD'
+              outline: 'solid 4px #404846DD',
+              animation: 'filterHighlight 1s ease-in-out',
             }}>
             <div className="w-full h-fit">
               <img src={msg.profilePic} className="inline-block h-6 -translate-y-0.5 rounded-2xl" alt="" />
@@ -134,7 +135,8 @@ export default function App() {
         style={{
           border: 'solid 3px #ffffff22',
           outline: 'solid 4px #404846DD',
-          display: latestFollow ? "" : "none"
+          display: latestFollow ? "" : "none",
+          animation: latestFollow ? "slideIn 0.5s ease-in-out, wiggle 1s infinite 0.1s" : ""
         }}
       >
         <div className="w-full h-full flex flex-col items-center justify-around">
@@ -142,7 +144,7 @@ export default function App() {
             <img className="rounded-full h-[2lh] mr-2" src={latestFollow?.profilePic} alt="" />
             <span className="text-3xl">{latestFollow?.username}</span>
           </div>
-          <span className="">{getRandomObject(followMessages)}</span>
+          <span className="flex flex-row items-center justify-center break-words text-center">{getRandomObject(followMessages)}</span>
         </div>
       </div>
     </div>
