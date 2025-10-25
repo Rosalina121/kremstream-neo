@@ -22,6 +22,20 @@ type Follow = {
 
 
 export default function App() {
+  const followMessages = [
+    "unika blueshella muchomorkiem",
+    "unika piorunka gwiazdką",
+    "wyprzedza z draftem",
+    "szaleje na Lil' Dumpy",
+    "dostaje 3 redshelle na drugim",
+    "robi skrót na Whistlestop za pierwszym",
+    "odpala Bullet Billa"
+  ]
+  const getRandomObject = (array: string[]) => {
+    const randomObject = array[Math.floor(Math.random() * array.length)];
+    return randomObject;
+  };
+  
   const [messages, setMessages] = useState<ChatMsg[]>([
     {
       id: "1",
@@ -38,12 +52,12 @@ export default function App() {
       profilePic: "https://test.palitechnika.com/Transgender_Pride_flag.png",
     }
   ]);
-  const [latestFollow, setLatestFollow] = useState<Follow | null>(null);
+  const [latestFollow, setLatestFollow] = useState<Follow | null>();
   const [followQueue, setFollowQueue] = useState<Follow[]>([]);
   const followTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const ref = useRef<HTMLDivElement>(null);
-  
+
   useIsOverflow(ref as React.RefObject<HTMLDivElement>, (isOverflowCallback) => {
     if (isOverflowCallback) {
       setMessages((prev) => prev.slice(1));
@@ -114,6 +128,22 @@ export default function App() {
             </div>
           </div>
         ))}
+      </div>
+      {/* follow */}
+      <div className="absolute top-12 right-12 w-96 h-48 bg-[#404846DD] text-white font-bold text-xl rounded-4xl p-3"
+        style={{
+          border: 'solid 3px #ffffff22',
+          outline: 'solid 4px #404846DD',
+          display: latestFollow ? "" : "none"
+        }}
+      >
+        <div className="w-full h-full flex flex-col items-center justify-around">
+          <div className="w-full h-fit flex flex-row items-center justify-center">
+            <img className="rounded-full h-[2lh] mr-2" src={latestFollow?.profilePic} alt="" />
+            <span className="text-3xl">{latestFollow?.username}</span>
+          </div>
+          <span className="">{getRandomObject(followMessages)}</span>
+        </div>
       </div>
     </div>
   );
