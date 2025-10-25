@@ -18,7 +18,8 @@ type Follow = {
   profilePic: string;
 };
 
-
+const primaryColor = "#383838AA";
+const secondaryColor = "#ffffff55";
 
 export default function App() {
   const followMessages = [
@@ -35,22 +36,7 @@ export default function App() {
     return randomObject;
   };
 
-  const [messages, setMessages] = useState<ChatMsg[]>([
-    {
-      id: "1",
-      username: "Rosalina",
-      text: "Hello, world! Aaaaaaaa dobra już jakoś wygląda",
-      color: "red",
-      profilePic: "https://test.palitechnika.com/Transgender_Pride_flag.png",
-    },
-    {
-      id: "2",
-      username: "Rosalina",
-      text: "Hello, world!",
-      color: "red",
-      profilePic: "https://test.palitechnika.com/Transgender_Pride_flag.png",
-    }
-  ]);
+  const [messages, setMessages] = useState<ChatMsg[]>([]);
   const [latestFollow, setLatestFollow] = useState<Follow | null>();
   const [followQueue, setFollowQueue] = useState<Follow[]>([]);
   const followTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -111,10 +97,11 @@ export default function App() {
         {messages.map((msg, index) => (
           <div
             key={index}
-            className={`bg-[#404846DD] h-fit text-white font-bold p-3 rounded-3xl w-full ${msg.isNew ? 'new-message' : ''}`}
+            className={`h-fit text-white font-bold p-3 rounded-3xl w-full ${msg.isNew ? 'new-message' : ''}`}
             style={{
-              border: 'solid 3px #ffffff22',
-              outline: 'solid 5px #404846DD',
+              backgroundColor: primaryColor,
+              border: `solid 3px ${secondaryColor}`,
+              outline: `solid 5px ${primaryColor}`,
             }}
             onAnimationEnd={() => {
               if (msg.isNew) {
@@ -134,10 +121,11 @@ export default function App() {
 
       </div>
       {/* follow */}
-      <div className="absolute top-12 right-12 w-96 h-48 bg-[#404846DD] text-white font-bold text-xl rounded-4xl p-3"
+      <div className={`absolute top-12 right-12 w-96 h-48 text-white font-bold text-xl rounded-4xl p-3`}
         style={{
-          border: 'solid 3px #ffffff22',
-          outline: 'solid 5px #404846DD',
+          backgroundColor: primaryColor,
+          border: `solid 3px ${secondaryColor}`,
+          outline: `solid 5px ${primaryColor}`,
           display: latestFollow ? "" : "none",
           animation: latestFollow ? "slideIn 0.5s ease-in-out, wiggle 1s infinite 0.1s" : ""
         }}
@@ -151,10 +139,11 @@ export default function App() {
         </div>
       </div>
       {/* cam */}
-      <div className="absolute bottom-[480px] left-[52px] w-[335px] aspect-square bg-[#404846DD] text-white font-bold text-xl rounded-[3.5rem] p-3"
+      <div className={`absolute bottom-[480px] left-[52px] w-[335px] aspect-square text-white font-bold text-xl rounded-[3.5rem] p-3`}
         style={{
-          border: 'solid 3px #ffffff22',
-          outline: 'solid 5px #404846DD',
+          backgroundColor: primaryColor,
+          border: `solid 3px ${secondaryColor}`,
+          outline: `solid 5px ${primaryColor}`,
         }}>
 
       </div>
