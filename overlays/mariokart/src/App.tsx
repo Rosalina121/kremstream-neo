@@ -12,6 +12,7 @@ type ChatMsg = {
   color: string;
   profilePic: string;
   source?: string;
+  isNew?: boolean;
 };
 
 type Follow = {
@@ -71,7 +72,7 @@ export default function App() {
       // console.log("Received message:", event.data);
       const msg = JSON.parse(event.data);
       if (msg.type === "chat") {
-        setMessages((prev) => [...prev, msg.data]);
+        setMessages((prev) => [...prev, { ...msg.data, isNew: true }]);
       }
       if (msg.type === "chatDelete") {
         setMessages((prev) => prev.filter((m) => m.id !== msg.data.id));
@@ -114,12 +115,19 @@ export default function App() {
       <div ref={ref} className=" w-[335px] h-[650px] absolute bottom-32 left-[52px] gap-4 flex flex-col items-center justify-end">
         {/* chat msg */}
         {messages.map((msg, index) => (
-          <div key={index} className="bg-[#404846DD] h-fit text-white font-bold text-xl p-3 rounded-3xl w-full"
+          <div
+            key={index}
+            className={`bg-[#404846DD] h-fit text-white font-bold text-xl p-3 rounded-3xl w-full ${msg.isNew ? 'new-message' : ''}`}
             style={{
               border: 'solid 3px #ffffff22',
               outline: 'solid 4px #404846DD',
-              animation: 'filterHighlight 1s ease-in-out',
-            }}>
+            }}
+            onAnimationEnd={() => {
+              if (msg.isNew) {
+                setMessages(prev => prev.map(m => m.id === msg.id ? { ...m, isNew: false } : m));
+              }
+            }}
+          >
             <div className="w-full h-fit">
               <img src={msg.profilePic} className="inline-block h-6 -translate-y-0.5 rounded-2xl" alt="" />
               <span className=""
@@ -129,6 +137,7 @@ export default function App() {
             </div>
           </div>
         ))}
+
       </div>
       {/* follow */}
       <div className="absolute top-12 right-12 w-96 h-48 bg-[#404846DD] text-white font-bold text-xl rounded-4xl p-3"
