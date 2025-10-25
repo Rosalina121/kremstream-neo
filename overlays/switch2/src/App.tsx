@@ -79,7 +79,7 @@ type BarButton = {
 const barButtons: BarButton[] = [
   {
     icon: <FiYoutube className="text-5xl text-red-600" />,
-    highlightText: "youtube.com/@alina_rosa",
+    highlightText: "youtube.com/@kremstream",
     idx: 1,
   },
   {

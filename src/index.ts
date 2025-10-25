@@ -69,6 +69,13 @@ app.use(
 );
 app.use(
     serveStatic({
+        prefix: "/overlay/mariokart",
+        assets: join(process.cwd(), "overlays/mariokart/dist").toString(),
+        alwaysStatic: true,
+    }),
+);
+app.use(
+    serveStatic({
         prefix: "/overlay/sims2",
         assets: join(process.cwd(), "overlays/sims2/dist").toString(),
         alwaysStatic: true,
