@@ -73,3 +73,7 @@
     /* pomyśl, czy nie chcesz też tego slide ina*/
     animation: filterHighlight 1s ease-in-out;
 }
+
+.emote {
+    display: inline;
+}

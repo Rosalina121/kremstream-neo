@@ -112,15 +112,15 @@ export default function App() {
         backgroundImage: `url(${backgroundImage})`
       }}>
       {/* chat */}
-      <div ref={ref} className=" w-[335px] h-[650px] absolute bottom-32 left-[52px] gap-4 flex flex-col items-center justify-end">
+      <div ref={ref} className="w-[335px] h-[320px] absolute bottom-32 left-[52px] gap-4 flex flex-col items-center justify-end">
         {/* chat msg */}
         {messages.map((msg, index) => (
           <div
             key={index}
-            className={`bg-[#404846DD] h-fit text-white font-bold text-xl p-3 rounded-3xl w-full ${msg.isNew ? 'new-message' : ''}`}
+            className={`bg-[#404846DD] h-fit text-white font-bold p-3 rounded-3xl w-full ${msg.isNew ? 'new-message' : ''}`}
             style={{
               border: 'solid 3px #ffffff22',
-              outline: 'solid 4px #404846DD',
+              outline: 'solid 5px #404846DD',
             }}
             onAnimationEnd={() => {
               if (msg.isNew) {
@@ -133,7 +133,7 @@ export default function App() {
               <span className=""
                 style={{ color: msg.color }}>
                 {" "}{msg.username}:{" "}</span>
-              <span className="break-words">{msg.text}</span>
+              <span className="break-normal" dangerouslySetInnerHTML={{ __html: msg.text }}></span>
             </div>
           </div>
         ))}
@@ -143,7 +143,7 @@ export default function App() {
       <div className="absolute top-12 right-12 w-96 h-48 bg-[#404846DD] text-white font-bold text-xl rounded-4xl p-3"
         style={{
           border: 'solid 3px #ffffff22',
-          outline: 'solid 4px #404846DD',
+          outline: 'solid 5px #404846DD',
           display: latestFollow ? "" : "none",
           animation: latestFollow ? "slideIn 0.5s ease-in-out, wiggle 1s infinite 0.1s" : ""
         }}
@@ -155,6 +155,14 @@ export default function App() {
           </div>
           <span className="flex flex-row items-center justify-center break-words text-center">{getRandomObject(followMessages)}</span>
         </div>
+      </div>
+      {/* cam */}
+      <div className="absolute bottom-[480px] left-[52px] w-[335px] aspect-square bg-[#404846DD] text-white font-bold text-xl rounded-[3.5rem] p-3"
+        style={{
+          border: 'solid 3px #ffffff22',
+          outline: 'solid 5px #404846DD',
+        }}>
+
       </div>
     </div>
   );
