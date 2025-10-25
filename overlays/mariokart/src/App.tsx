@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { useIsOverflow } from "./components/isOverflow";
-import backgroundImage from "./template ASSet.png";
-
 
 
 type ChatMsg = {
@@ -66,7 +64,6 @@ export default function App() {
   }, [messages]);
 
   useEffect(() => {
-    console.log("img", backgroundImage)
     const ws = new WebSocket("ws://localhost:3000/ws");
     ws.onmessage = (event) => {
       // console.log("Received message:", event.data);
@@ -107,10 +104,7 @@ export default function App() {
   }, [latestFollow, followQueue]);
 
   return (
-    <div className="w-screen h-screen"
-      style={{
-        backgroundImage: `url(${backgroundImage})`
-      }}>
+    <div className="w-screen h-screen">
       {/* chat */}
       <div ref={ref} className="w-[335px] h-[320px] absolute bottom-32 left-[52px] gap-4 flex flex-col items-center justify-end">
         {/* chat msg */}
