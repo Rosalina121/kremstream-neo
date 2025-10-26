@@ -69,6 +69,7 @@
         filter: hue-rotate(0deg) brightness(1);
     }
 }
+
 .new-message {
     /* pomyśl, czy nie chcesz też tego slide ina*/
     animation: filterHighlight 1s ease-in-out;
@@ -76,4 +77,29 @@
 
 .emote {
     display: inline;
+}
+
+.mkworld-tx-gradient {
+    position: relative;
+    display: inline-block;
+}
+
+.mkworld-tx-gradient::before,
+.mkworld-tx-gradient::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.mkworld-tx-gradient::before {
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.8);
+}
+
+.mkworld-tx-gradient::after {
+    background: linear-gradient(to bottom, #EBEBEB, #DDDDDD);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }

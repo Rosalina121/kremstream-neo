@@ -162,15 +162,17 @@ export default function App() {
       </div>
       {/* MMR */}
       <div
-        className={`absolute bottom-[44px] left-[25rem] w-48 h-[66px] text-5xl text-white font-bold p-3 rounded-[22px] flex items-center justify-center`}
+        className={`absolute bottom-[44px] gap-2 left-[25rem] w-48 h-[66px] text-5xl text-white font-bold p-3 rounded-[22px] flex items-center justify-center`}
         style={{
           backgroundColor: primaryColor,
           border: `solid 3px ${secondaryColor}`,
           outline: `solid 5px ${primaryColor}`,
         }}
       >
-        <span className="break-normal"
-          style={{ textShadow: "2px 2px 1px black" }}>{mmr}</span>
+        <span className="text-5xl text-slate-300">◉</span>
+        <span className="break-normal mkworld-tx-gradient"
+          data-text={mmr}
+          >{mmr}</span>
       </div>
     </div>
   );
