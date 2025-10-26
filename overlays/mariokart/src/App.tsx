@@ -103,7 +103,8 @@ export default function App() {
 
   return (
     <div className="w-screen h-screen"
-      style={{ backgroundImage: `url(${bg})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      // style={{ backgroundImage: `url(${bg})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+    >
       {/* chat */}
       <div ref={ref} className="w-[335px] h-[320px] absolute bottom-32 left-[52px] gap-4 flex flex-col items-center justify-end">
         {/* chat msg */}
