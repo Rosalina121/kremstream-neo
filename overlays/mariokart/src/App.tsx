@@ -44,6 +44,14 @@ export default function App() {
 
   const ref = useRef<HTMLDivElement>(null);
 
+  // Load initial MMR when component mounts
+  useEffect(() => {
+    fetch('/api/mmr')
+      .then(res => res.json())
+      .then(data => setMmr(data.mmr))
+      .catch(err => console.error('Error loading MMR:', err));
+  }, []);
+
   useIsOverflow(ref as React.RefObject<HTMLDivElement>, (isOverflowCallback) => {
     if (isOverflowCallback) {
       setMessages((prev) => prev.slice(1));
@@ -161,8 +169,8 @@ export default function App() {
           outline: `solid 5px ${primaryColor}`,
         }}
       >
-          <span className="break-normal"
-            style={{ textShadow: "2px 2px 1px black"}}>{mmr}</span>
+        <span className="break-normal"
+          style={{ textShadow: "2px 2px 1px black" }}>{mmr}</span>
       </div>
     </div>
   );
