@@ -185,6 +185,7 @@ src/sounds/*
 # YouTube
 youtube_tokens.json
 youtube_chat_cache.json
-
+# local data
+data/mmr.json
 # KDE Dolphin colored folders
 .directory

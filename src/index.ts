@@ -4,7 +4,6 @@ import { registerYoutubeOAuth } from "./youtube-oauth";
 import { tokenEvents } from "./token-events";
 import serveStatic from "@elysiajs/static";
 import { join } from "path";
-import { writeFile, readFile, mkdir } from "fs/promises";
 import { OBSWebSocket } from "./obs-websocket";
 import { initVnyan, sendToVnyan } from "./vnyan-int";
 import { eventBus } from "./event-bus";
@@ -13,22 +12,7 @@ import { TwitchIntegration } from "./integrations/twitch-integration";
 import { YouTubeIntegration } from "./integrations/youtube-integration";
 import { StartupManager } from "./startup-manager";
 import { fetchMmr } from "./mkcentral";
-
-const MMR_FILE_PATH = join(process.cwd(), 'data', 'mmr.json');
-
-async function saveMmr(mmr: number) {
-    await mkdir(join(process.cwd(), 'data'), { recursive: true });
-    await writeFile(MMR_FILE_PATH, JSON.stringify({ mmr }), 'utf-8');
-}
-
-async function loadMmr(): Promise<number> {
-    try {
-        const data = await readFile(MMR_FILE_PATH, 'utf-8');
-        return JSON.parse(data).mmr;
-    } catch {
-        return 4600; // fallback
-    }
-}
+import { mmrManager } from "./mk-mmr";
 
 const app = new Elysia();
 const obsClient = new OBSWebSocket();
@@ -61,7 +45,7 @@ app.ws("/ws", {
                 }, 100);
             }
             if (data.data.subType === "mmr") {
-                await saveMmr(data.data.mmr);
+                await mmrManager.saveMmr(data.data.mmr);
                 integrationManager.broadcast({ type: "mmr", data: data.data.mmr });
             }
         }
@@ -135,7 +119,7 @@ tokenEvents.on("youtubeTokenReady", async () => {
 });
 
 app.get("/api/mmr", async () => {
-    const mmr = await loadMmr();
+    const mmr = await mmrManager.loadMmr();
     return { mmr };
 });
 

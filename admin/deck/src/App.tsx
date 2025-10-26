@@ -13,6 +13,14 @@ export default function App() {
   const [mmr, setMmr] = useState(0);
   const [mmrModalOpen, setMmrModalOpen] = useState(false);
 
+  // load mmr
+  useEffect(() => {
+    fetch('/api/mmr')
+      .then(res => res.json())
+      .then(data => setMmr(data.mmr))
+      .catch(err => console.error('Error loading MMR:', err));
+  }, []);
+
   useEffect(() => {
     const ws = new WebSocket("ws://192.168.0.102:3000/ws");
     wsRef.current = ws;
@@ -46,7 +54,7 @@ export default function App() {
       wsRef.current.send(JSON.stringify({ type: "overlay", data: { subType: "mmr", mmr } }));
     }
   }
- 
+
   return (
     <div className="flex items-center justify-center w-screen h-screen">
       {/* mmr popup */}
@@ -54,8 +62,8 @@ export default function App() {
         onClick={() => handleSubmitMmr()}>
         <div className="w-1/3 aspect-square rounded-xl bg-white flex flex-col gap-4 items-center justify-center"
           onClick={(e) => e.stopPropagation()}>
-            <span className="text-xl font-bold">New MMR:</span>
-          <input className="border-sky-200 border-2 text-center text-3xl p-2 rounded-2xl" type="text" value={mmr} onChange={(e) => setMmr(parseInt(e.target.value))}/>
+          <span className="text-xl font-bold">New MMR:</span>
+          <input className="border-sky-200 border-2 text-center text-3xl p-2 rounded-2xl" type="text" value={mmr || ''} onChange={(e) => setMmr(parseInt(e.target.value) || 0)} />
         </div>
       </div>
       <div className="grid-cols-5 grid grid-rows-3 gap-8 grow m-24">
