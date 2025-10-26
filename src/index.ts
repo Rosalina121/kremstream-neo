@@ -11,7 +11,6 @@ import { IntegrationManager } from "./integration-manager";
 import { TwitchIntegration } from "./integrations/twitch-integration";
 import { YouTubeIntegration } from "./integrations/youtube-integration";
 import { StartupManager } from "./startup-manager";
-import { fetchMmr } from "./mkcentral";
 import { mmrManager } from "./mk-mmr";
 
 const app = new Elysia();
