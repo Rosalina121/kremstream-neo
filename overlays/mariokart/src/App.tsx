@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
+import followSound from "../sounds/follow.wav";
 import { useIsOverflow } from "./components/isOverflow";
-import bg from "./template ASSet.png"
+// import bg from "./template ASSet.png"
 
 type ChatMsg = {
   id: string;
@@ -40,6 +41,7 @@ export default function App() {
   const [latestFollow, setLatestFollow] = useState<Follow | null>();
   const [followQueue, setFollowQueue] = useState<Follow[]>([]);
   const followTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const followAudioRef = useRef<HTMLAudioElement>(null);
   const [mmr, setMmr] = useState<number>(4600);
 
   const ref = useRef<HTMLDivElement>(null);
@@ -72,6 +74,7 @@ export default function App() {
       if (msg.type === "follow") {
         if (!latestFollow) {
           setLatestFollow(msg.data);
+          followAudioRef.current?.play();
           if (followTimeoutRef.current) clearTimeout(followTimeoutRef.current);
           followTimeoutRef.current = setTimeout(() => {
             setLatestFollow(null);
@@ -103,8 +106,9 @@ export default function App() {
 
   return (
     <div className="w-screen h-screen"
-      // style={{ backgroundImage: `url(${bg})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+    // style={{ backgroundImage: `url(${bg})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
     >
+      <audio ref={followAudioRef} src={followSound} />
       {/* chat */}
       <div ref={ref} className="w-[335px] h-[320px] absolute bottom-32 left-[52px] gap-4 flex flex-col items-center justify-end">
         {/* chat msg */}
@@ -173,7 +177,7 @@ export default function App() {
         <span className="text-5xl text-slate-300">◉</span>
         <span className="break-normal mkworld-tx-gradient"
           data-text={mmr}
-          >{mmr}</span>
+        >{mmr}</span>
       </div>
     </div>
   );
