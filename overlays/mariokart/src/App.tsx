@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { useIsOverflow } from "./components/isOverflow";
-
+import bg from "./template ASSet.png"
 
 type ChatMsg = {
   id: string;
@@ -40,6 +40,7 @@ export default function App() {
   const [latestFollow, setLatestFollow] = useState<Follow | null>();
   const [followQueue, setFollowQueue] = useState<Follow[]>([]);
   const followTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [mmr, setMmr] = useState<number>(4600);
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -71,6 +72,9 @@ export default function App() {
           setFollowQueue((prev) => [...prev, msg.data]);
         }
       }
+      if (msg.type === "mmr") {
+        setMmr(msg.data);
+      }
     };
     return () => ws.close();
   }, []);
@@ -90,7 +94,8 @@ export default function App() {
   }, [latestFollow, followQueue]);
 
   return (
-    <div className="w-screen h-screen">
+    <div className="w-screen h-screen"
+      style={{ backgroundImage: `url(${bg})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
       {/* chat */}
       <div ref={ref} className="w-[335px] h-[320px] absolute bottom-32 left-[52px] gap-4 flex flex-col items-center justify-end">
         {/* chat msg */}
@@ -146,6 +151,18 @@ export default function App() {
           outline: `solid 5px ${primaryColor}`,
         }}>
 
+      </div>
+      {/* MMR */}
+      <div
+        className={`absolute bottom-[44px] left-[25rem] w-48 h-[66px] text-5xl text-white font-bold p-3 rounded-[22px] flex items-center justify-center`}
+        style={{
+          backgroundColor: primaryColor,
+          border: `solid 3px ${secondaryColor}`,
+          outline: `solid 5px ${primaryColor}`,
+        }}
+      >
+          <span className="break-normal"
+            style={{ textShadow: "2px 2px 1px black"}}>{mmr}</span>
       </div>
     </div>
   );

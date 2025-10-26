@@ -11,6 +11,7 @@ import { IntegrationManager } from "./integration-manager";
 import { TwitchIntegration } from "./integrations/twitch-integration";
 import { YouTubeIntegration } from "./integrations/youtube-integration";
 import { StartupManager } from "./startup-manager";
+import { fetchMmr } from "./mkcentral";
 
 const app = new Elysia();
 const obsClient = new OBSWebSocket();
@@ -41,6 +42,9 @@ app.ws("/ws", {
                 setTimeout(() => {
                     obsClient.toggleFilterEnabled("Freeze");
                 }, 100);
+            }
+            if (data.data.subType === "mmr") {
+                integrationManager.broadcast({ type: "mmr", data: data.data.mmr });
             }
         }
         if (data.type === "obs") {

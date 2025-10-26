@@ -4,11 +4,14 @@
       like toggling a scene in OBS or resetting VNyan
 */
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
 
 export default function App() {
   const wsRef = useRef<WebSocket | null>(null);
+  // mmr
+  const [mmr, setMmr] = useState(0);
+  const [mmrModalOpen, setMmrModalOpen] = useState(false);
 
   useEffect(() => {
     const ws = new WebSocket("ws://192.168.0.102:3000/ws");
@@ -37,8 +40,24 @@ export default function App() {
     }
   }
 
+  function handleSubmitMmr() {
+    setMmrModalOpen(false);
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify({ type: "overlay", data: { subType: "mmr", mmr } }));
+    }
+  }
+ 
   return (
     <div className="flex items-center justify-center w-screen h-screen">
+      {/* mmr popup */}
+      <div className={`${mmrModalOpen ? 'flex' : 'hidden'} absolute w-full h-full bg-gray-500/20 items-center justify-center`}
+        onClick={() => handleSubmitMmr()}>
+        <div className="w-1/3 aspect-square rounded-xl bg-white flex flex-col gap-4 items-center justify-center"
+          onClick={(e) => e.stopPropagation()}>
+            <span className="text-xl font-bold">New MMR:</span>
+          <input className="border-sky-200 border-2 text-center text-3xl p-2 rounded-2xl" type="text" value={mmr} onChange={(e) => setMmr(parseInt(e.target.value))}/>
+        </div>
+      </div>
       <div className="grid-cols-5 grid grid-rows-3 gap-8 grow m-24">
         <div
           className="bg-gray-300 aspect-square rounded-3xl flex items-end justify-center p-8 text-4xl font-bold text-shadow-lg text-white cursor-pointer"
@@ -54,8 +73,11 @@ export default function App() {
           onClick={handleVnyanResetClick}>
           Reset Pos
         </div>
-        <div className="bg-gray-300 aspect-square rounded-3xl flex items-end justify-center p-8 text-4xl font-bold text-shadow-lg text-white">
-          Dupa
+        <div className="bg-gray-300 aspect-square rounded-3xl flex items-end justify-center p-8 text-4xl font-bold text-shadow-lg text-white"
+          onClick={() => {
+            setMmrModalOpen(true);
+          }}>
+          Set MMR
         </div>
         <div className="bg-gray-300 aspect-square rounded-3xl flex items-end justify-center p-8 text-4xl font-bold text-shadow-lg text-white">
           Dupa
