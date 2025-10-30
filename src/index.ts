@@ -118,6 +118,13 @@ app.use(
 );
 app.use(
     serveStatic({
+        prefix: "/overlay/simswait",
+        assets: join(process.cwd(), "overlays/simswait/dist").toString(),
+        alwaysStatic: true,
+    }),
+);
+app.use(
+    serveStatic({
         prefix: "/admin/deck",
         assets: join(process.cwd(), "admin/deck/dist").toString(),
         alwaysStatic: true,

@@ -1,0 +1,34 @@
+@font-face {
+    font-family: 'Comic';
+    src: url('./assets/ComicRelief-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Comic';
+    src: url('./assets/ComicRelief-Bold.woff2') format('woff');
+    font-weight: bold;
+    font-style: normal;
+}
+
+
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.scrolling-container {
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.scrolling-text {
+    display: inline-block;
+    animation: scroll 45s linear infinite;
+}
