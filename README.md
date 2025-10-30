@@ -86,7 +86,7 @@ In progress (to bring it up to speed compared to `krem-bun`):
 By default all chat messages are parsed for any global Twitch, 7TV, BetterTTV and FrankerZ Emotes. You could also add in channel specific ones by adapting the fetcher calls. This includes also messages from YouTube, so YT chat can use Twitch emotes (tho it will be only seen on the overlay). No YT emotes support for now, yet.
 
 *Note:* Sometimes animated emotes may not show instantly, or even time-out. This seems to be
-a Twitch CDN issue, as it randomly loads fast or doesn't at all. On tech side this seems to only happen when using the `default` URL path rather than `animated` one, but I'm not sure how to check if an emote is animated and force it. May be done on the library level perhaps, but as per docs, default **should** work fine (even though it doesn't). Your mileage may vary.
+a Twitch CDN issue, as it randomly loads fast or doesn't at all. On tech side this seems to only happen when using the `default` URL path rather than `animated` one, ~~but I'm not sure how to check if an emote is animated and force it~~ it can be checked via Twitch API, but not implemented yet. May be done on the library level perhaps, but as per docs, default **should** work fine (even though it doesn't). Your mileage may vary.
 
 ## Overlays
 Overlays are generally a separate, self-contained React apps,
@@ -118,6 +118,12 @@ If this doesn't work for your setup, you can adapt what the request send to the 
 or just comment it out. Websocket handler has, well, no error handling so if something goes wrong
 the whole app crashes lol.
 
+### Mario Kart
+Overlay that matches Mario Kart World's ui (at 1080p at least, it's all hardcoded).
+
+Chat comes in on top of coin and lap counter, there is a space for webcam, and an extra
+mmr counter next to coin/laps (which can be updated manually via `admin/deck`).
+
 #### Extra
 Under `/overlay/sims2ui` there is an extra html file that when used in a browser source can act as
 a background for other sources, or text or whatevs. It should look like a Sims 2 popup dialog. It's flexible, as in, the rounded corners stay the same regardless of its size, so you may want to tweak
@@ -130,6 +136,13 @@ the browser source resolution.
 
 Additionally to stream overlays we've also got some wait screens matching above overlays.
 
+### Sims Wait
+
+The Sims loading screeen. The image is hardcoded, not fancy CSS here, so you'd have to supply yours.
+Loading quips are in a single array, feel free to change them.
+
+*May sometimes bug out when looping*
+
 ### Sims 2 Wait
 
 Based on the loading screen from Sims 2. Surprisingly... it's all React and janky-ass CSS. Modifying may prove to be a challenge, but you can easily swap icons (kept as `react-icons`), text and the portrait. It's also, just like others, hardcoded for 1080p. In this case adapting for other resolutions would require tinkering with the 3D transform and grid layout. Just FYI.
@@ -138,7 +151,11 @@ Based on the loading screen from Sims 2. Surprisingly... it's all React and jank
 
 ## External programs
 ### OBS
-There's a websocket server connected to the OBS' one. You can change scenes and do other stuff straight from the deck view.
+There's a websocket server connected to the OBS' one. You can change scenes, enable filters and more. If you add scenes to Deck it's a nice
+way to not have to touch OBS directly.
+
+**NOTE:** It WILL crash the whole app if your setup is not to code expectations (ie. changing Freeze filter if there is none).
+I just don't handle errors there yet. It's not by design, but procrastination.
 
 ### VNyan
 You need to create a graph in VNyan that listens on stuff. Right now for example I have a "reset pos" button on Deck that sends a message that calls the websocket and resets the avatar position in VNyan. It's pretty basic so far, but personally I don't have more uses for that.
