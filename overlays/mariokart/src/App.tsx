@@ -17,7 +17,9 @@ type ChatMsg = {
 type Follow = {
   username: string;
   profilePic: string;
+  flavorText: string;  // Add this
 };
+
 
 const primaryColor = "#383838AA";
 const secondaryColor = "#ffffff55";
@@ -72,17 +74,14 @@ export default function App() {
         setMessages((prev) => prev.filter((m) => m.id !== msg.data.id));
       }
       if (msg.type === "follow") {
-        if (!latestFollow) {
-          setLatestFollow(msg.data);
-          followAudioRef.current?.play();
-          if (followTimeoutRef.current) clearTimeout(followTimeoutRef.current);
-          followTimeoutRef.current = setTimeout(() => {
-            setLatestFollow(null);
-          }, 5000);
-        } else {
-          setFollowQueue((prev) => [...prev, msg.data]);
-        }
+        const followWithFlavor = {
+          ...msg.data,
+          flavorText: getRandomObject(followMessages)
+        };
+        setFollowQueue((prev) => [...prev, followWithFlavor]);
+        followAudioRef.current?.play();
       }
+
       if (msg.type === "mmr") {
         setMmr(msg.data);
       }
@@ -97,6 +96,10 @@ export default function App() {
       const next = followQueue[0];
       setFollowQueue((prev) => prev.slice(1));
       setLatestFollow(next);
+      if (followAudioRef.current) {
+        followAudioRef.current.currentTime = 0;
+        followAudioRef.current.play();
+      }
       if (followTimeoutRef.current) clearTimeout(followTimeoutRef.current);
       followTimeoutRef.current = setTimeout(() => {
         setLatestFollow(null);
@@ -139,23 +142,33 @@ export default function App() {
 
       </div>
       {/* follow */}
-      <div className={`absolute top-12 right-12 w-96 h-48 text-white font-bold text-xl rounded-4xl p-3`}
+      {/* follow */}
+      <div className={`absolute top-12 right-12`}
         style={{
-          backgroundColor: primaryColor,
-          border: `solid 3px ${secondaryColor}`,
-          outline: `solid 5px ${primaryColor}`,
           display: latestFollow ? "" : "none",
-          animation: latestFollow ? "slideIn 0.5s ease-in-out, wiggle 1s infinite 0.1s" : ""
+          animation: latestFollow ? "slideIn 0.5s ease-in-out" : ""
         }}
       >
-        <div className="w-full h-full flex flex-col items-center justify-around">
-          <div className="w-full h-fit flex flex-row items-center justify-center">
-            <img className="rounded-full h-[2lh] mr-2" src={latestFollow?.profilePic} alt="" />
-            <span className="text-3xl">{latestFollow?.username}</span>
+        <div className={`w-96 h-48 text-white font-bold text-xl rounded-4xl p-3`}
+          style={{
+            backgroundColor: primaryColor,
+            border: `solid 3px ${secondaryColor}`,
+            outline: `solid 5px ${primaryColor}`,
+            animation: latestFollow ? "wiggle 1s infinite 0.1s" : ""
+          }}
+        >
+          <div className="w-full h-full flex flex-col items-center justify-around">
+            <div className="w-full h-fit flex flex-row items-center justify-center">
+              <img className="rounded-full h-[2lh] mr-2" src={latestFollow?.profilePic} alt="" />
+              <span className="text-3xl">{latestFollow?.username}</span>
+            </div>
+            <span className="flex flex-row items-center justify-center break-words text-center">
+              {latestFollow?.flavorText}
+            </span>
           </div>
-          <span className="flex flex-row items-center justify-center break-words text-center">{getRandomObject(followMessages)}</span>
         </div>
       </div>
+
       {/* cam */}
       <div className={`absolute bottom-[480px] left-[52px] w-[335px] aspect-square text-white font-bold text-xl rounded-[3.5rem] p-3`}
         style={{
