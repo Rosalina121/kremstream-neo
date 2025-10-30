@@ -82,6 +82,10 @@ In progress (to bring it up to speed compared to `krem-bun`):
 - OBS websocket API - semi functional, no abstractions but works (example with enabling a filter)
 - VNyan websocket API - already somewhat works, requires manual setup on VNyan side, example with resetting position
 
+## Chat filter
+There is a simple filter with an array that ignores messages from common bots. Be sure to
+change it for your own needs.
+
 ## Chat Emotes
 By default all chat messages are parsed for any global Twitch, 7TV, BetterTTV and FrankerZ Emotes. You could also add in channel specific ones by adapting the fetcher calls. This includes also messages from YouTube, so YT chat can use Twitch emotes (tho it will be only seen on the overlay). No YT emotes support for now, yet.
 
