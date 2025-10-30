@@ -149,7 +149,7 @@ export class TwitchIntegration extends AbstractIntegration {
             this.connect(this.reconnectUrl || undefined);
         }, 6 * 60 * 1000);
     }
-    
+
     // ws://127.0.0.1:8080/ws           -- TwitchCLI mock websocket
     // wss://eventsub.wss.twitch.tv/ws  -- Real WebSocket
     url = Bun.argv[2] == "--debug" ? "ws://127.0.0.1:8080/ws" : "wss://eventsub.wss.twitch.tv/ws";
@@ -212,6 +212,11 @@ export class TwitchIntegration extends AbstractIntegration {
                     const text = event.message.text;
                     const id = event.message_id;
                     let profilePic = "";
+
+                    // ignored chatters - like bots you don't need to show in overlay
+                    if (["Nightbot", "Moobot"].includes(username)) {
+                        return;
+                    }
 
                     if (userId) {
                         profilePic = await this.fetchProfilePic(userId);
