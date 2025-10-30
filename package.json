@@ -7,6 +7,7 @@
   },
   "scripts": {
     "start": "bun src/index.ts",
+    "debug": "bun src/index.ts --debug",
     "build:overlay:sims2wait": "cd overlays/sims2wait && bun run build",
     "build:overlay:switch2": "cd overlays/switch2 && bun run build",
     "build:overlay:sims2": "cd overlays/sims2 && bun run build",
