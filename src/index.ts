@@ -61,6 +61,13 @@ app.ws("/ws", {
                     obsClient.setSourceEnabled("IMAGE To Be Continued", "Talk");
                 }, 100);
             }
+            if (data.data.subType === "freeze") {
+                obsClient.toggleFilterEnabled("Freeze");
+                setTimeout(() => {
+                    obsClient.toggleFilterEnabled("Freeze");
+                }, data.data.duration);
+                
+            }
         }
         if (data.type === "vnyan") {
             if (data.data.subType === "reset") {

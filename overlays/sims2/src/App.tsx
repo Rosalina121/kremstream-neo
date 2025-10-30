@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { useIsOverflow } from "./components/isOverflow";
-import followSound from '../sounds/follow.wav';
+import followSound from '../sounds/follow.mp3';
 import { GrPauseFill } from "react-icons/gr";
 
 import sims2UI from './assets/sims2hud.png'
@@ -31,6 +31,7 @@ export default function App() {
   const [followQueue, setFollowQueue] = useState<Follow[]>([]);
   const followTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const followAudioRef = useRef<HTMLAudioElement>(null);
+  const wsRef = useRef<WebSocket | null>(null);
 
   const [isPaused, setIsPaused] = useState(false);
 
@@ -54,6 +55,7 @@ export default function App() {
   // messages
   useEffect(() => {
     const ws = new WebSocket("ws://localhost:3000/ws");
+    wsRef.current = ws;
     ws.onmessage = (event) => {
       // console.log("Received message:", event.data);
       const msg = JSON.parse(event.data);
@@ -93,6 +95,18 @@ export default function App() {
       const next = followQueue[0];
       setFollowQueue((prev) => prev.slice(1));
       setLatestFollow(next);
+
+      // Send freeze message
+      if (wsRef.current) {
+        wsRef.current.send(JSON.stringify({
+          type: "obs",
+          data: {
+            subType: "freeze",
+            duration: 5000 // same as follow timeout
+          }
+        }));
+      }
+
       if (followAudioRef.current) {
         followAudioRef.current.currentTime = 0;
         followAudioRef.current.play();
