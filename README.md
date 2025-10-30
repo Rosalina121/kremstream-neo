@@ -7,6 +7,10 @@ This will work in similar way (same technologies duh), but will be more maintain
 
 Old project still works, it's just too janky, so decided to start from scratch
 
+# FYI
+It's already jank xD
+Stuff is missing from this readme, like Mario Kart World overlay or Sims wait. FYI.
+
 # Run
 
 ## To install
