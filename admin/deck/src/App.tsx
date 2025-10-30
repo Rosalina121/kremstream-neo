@@ -54,6 +54,12 @@ export default function App() {
       wsRef.current.send(JSON.stringify({ type: "overlay", data: { subType: "mmr", mmr } }));
     }
   }
+  
+  function handleJoJoClick() {
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify({ type: "obs", data: { subType: "jojo" } }));
+    }
+  }
 
   return (
     <div className="flex items-center justify-center w-screen h-screen">
@@ -87,8 +93,9 @@ export default function App() {
           }}>
           Set MMR
         </div>
-        <div className="bg-gray-300 aspect-square rounded-3xl flex items-end justify-center p-8 text-4xl font-bold text-shadow-lg text-white">
-          Dupa
+        <div className="bg-gray-300 aspect-square rounded-3xl flex items-end justify-center p-8 text-4xl font-bold text-shadow-lg text-white"
+          onClick={handleJoJoClick}>
+          JoJo
         </div>
 
         <div className="bg-gray-300 aspect-square rounded-3xl flex items-end justify-center p-8 text-4xl font-bold text-shadow-lg text-white">

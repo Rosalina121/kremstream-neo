@@ -149,8 +149,10 @@ export class TwitchIntegration extends AbstractIntegration {
             this.connect(this.reconnectUrl || undefined);
         }, 6 * 60 * 1000);
     }
-
-    private connect(url = "wss://eventsub.wss.twitch.tv/ws") {
+    
+    // ws://127.0.0.1:8080/ws           -- TwitchCLI mock websocket
+    // wss://eventsub.wss.twitch.tv/ws  -- Real WebSocket
+    private connect(url = "ws://127.0.0.1:8080/ws") {
         this.ws = new WebSocket(url);
 
         this.ws.onopen = () => {

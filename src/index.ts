@@ -43,6 +43,7 @@ app.ws("/ws", {
                     obsClient.toggleFilterEnabled("Freeze");
                 }, 100);
             }
+
             if (data.data.subType === "mmr") {
                 await mmrManager.saveMmr(data.data.mmr);
                 integrationManager.broadcast({ type: "mmr", data: data.data.mmr });
@@ -51,6 +52,14 @@ app.ws("/ws", {
         if (data.type === "obs") {
             if (data.data.subType === "scene") {
                 obsClient.setCurrentProgramScene(data.data.sceneName);
+            }
+            if (data.data.subType === "jojo") {
+                // integrationManager.broadcast({ type: "toggleVintage" });  // chyba niepotrzebne teraz
+                setTimeout(() => {
+                    obsClient.toggleFilterEnabled("Vintage");
+                    obsClient.toggleFilterEnabled("Freeze");
+                    obsClient.setSourceEnabled("IMAGE To Be Continued", "Talk");
+                }, 100);
             }
         }
         if (data.type === "vnyan") {

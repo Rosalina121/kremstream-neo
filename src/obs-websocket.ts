@@ -170,6 +170,16 @@ export class OBSWebSocket {
         return this.sendRequest("SetSourceFilterEnabled", { sourceName, filterName, filterEnabled });
     }
 
+    setSourceEnabled(sourceName: string, sceneName: string): void {
+        this.sendRequest("GetSceneItemId", { sceneName, sourceName })
+            .then((response) => {
+                // console.log(response);
+                // console.log(JSON.stringify(response));
+                // console.log(response.responseData);
+                this.sendRequest("SetSceneItemEnabled", { sceneName, sceneItemId: response.responseData.sceneItemId, sceneItemEnabled: true });
+            });
+    }
+
     // draft to have live stats from mk to show in overlay or sth
     // async getSourceScreenshot(
     //     sourceName: string,
