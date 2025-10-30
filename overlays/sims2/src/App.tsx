@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { useIsOverflow } from "./components/isOverflow";
-
+import followSound from '../sounds/follow.wav';
 import { GrPauseFill } from "react-icons/gr";
 
 import sims2UI from './assets/sims2hud.png'
@@ -20,6 +20,7 @@ type ChatMsg = {
 type Follow = {
   username: string;
   profilePic: string;
+  flavorText: string;
 };
 
 
@@ -29,12 +30,13 @@ export default function App() {
   const [latestFollow, setLatestFollow] = useState<Follow | null>(null);
   const [followQueue, setFollowQueue] = useState<Follow[]>([]);
   const followTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const followAudioRef = useRef<HTMLAudioElement>(null);
 
   const [isPaused, setIsPaused] = useState(false);
 
   const [currentTime, setCurrentTime] = useState('');
 
-  const [followString, setFollowString] = useState("")
+
   const followStrings: string[] = [
     "Od teraz Cię obserwuję. Każdy. Twój. Ruch.",
     "Mogę pożyczyć łyżeczkę cukru?",
@@ -70,16 +72,12 @@ export default function App() {
         setMessages((prev) => prev.filter((m) => m.id !== msg.data.id));
       }
       if (msg.type === "follow") {
-        if (!latestFollow) {
-          setFollowString(followStrings[Math.floor(Math.random() * followStrings.length)])
-          setLatestFollow(msg.data);
-          if (followTimeoutRef.current) clearTimeout(followTimeoutRef.current);
-          followTimeoutRef.current = setTimeout(() => {
-            setLatestFollow(null);
-          }, 5000);
-        } else {
-          setFollowQueue((prev) => [...prev, msg.data]);
-        }
+        const followWithFlavor = {
+          ...msg.data,
+          flavorText: `Cześć! Jestem ${msg.data.username}. ${followStrings[Math.floor(Math.random() * followStrings.length)]}`
+        };
+        setFollowQueue((prev) => [...prev, followWithFlavor]);
+        followAudioRef.current?.play();
       }
       if (msg.type === "togglePause") {
         setIsPaused((prev) => !prev);
@@ -95,6 +93,10 @@ export default function App() {
       const next = followQueue[0];
       setFollowQueue((prev) => prev.slice(1));
       setLatestFollow(next);
+      if (followAudioRef.current) {
+        followAudioRef.current.currentTime = 0;
+        followAudioRef.current.play();
+      }
       if (followTimeoutRef.current) clearTimeout(followTimeoutRef.current);
       followTimeoutRef.current = setTimeout(() => {
         setLatestFollow(null);
@@ -129,6 +131,7 @@ export default function App() {
 
   return (
     <div className="flex flex-row overflow-hidden">
+      <audio ref={followAudioRef} src={followSound} />
       <div className="w-[480px] bg-transparent">
         <div className="flex flex-col h-full">
           {/* Messages Container */}
@@ -260,7 +263,7 @@ export default function App() {
                 </div>
                 <div className="font-[Comic] flex flex-col items-center">
                   <span className="text-xl">
-                    Cześć! Jestem {latestFollow?.username || "Obserwujący"}. {followString}
+                    {latestFollow.flavorText}
                   </span>
                 </div>
               </div>
