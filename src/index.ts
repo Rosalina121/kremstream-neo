@@ -56,9 +56,12 @@ app.ws("/ws", {
             if (data.data.subType === "jojo") {
                 // integrationManager.broadcast({ type: "toggleVintage" });  // chyba niepotrzebne teraz
                 setTimeout(() => {
-                    obsClient.toggleFilterEnabled("Vintage");
+                    obsClient.toggleFilterEnabled("CRT");
+                    obsClient.toggleFilterEnabled("VHS");
                     obsClient.toggleFilterEnabled("Freeze");
-                    obsClient.setSourceEnabled("IMAGE To Be Continued", "Talk");
+                    obsClient.toggleSourceEnabled("TEXT VHS End", "Talk Grouped");
+                    obsClient.toggleSourceEnabled("TEXT VHS Extra", "Talk Grouped");
+
                 }, 100);
             }
             if (data.data.subType === "freeze") {
@@ -66,7 +69,7 @@ app.ws("/ws", {
                 setTimeout(() => {
                     obsClient.toggleFilterEnabled("Freeze");
                 }, data.data.duration);
-                
+
             }
         }
         if (data.type === "vnyan") {

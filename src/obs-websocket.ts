@@ -152,7 +152,10 @@ export class OBSWebSocket {
     }
 
     setCurrentProgramScene(sceneName: string): Promise<void> {
-        return this.sendRequest("SetCurrentProgramScene", { sceneName: sceneName });
+        return this.sendRequest("SetCurrentProgramScene", { sceneName: sceneName })
+            .catch((error) => {
+                console.error("Set Current Program Scene", error);
+            });
     }
 
     toggleFilterEnabled(filterName: string): void {
@@ -161,24 +164,69 @@ export class OBSWebSocket {
                 const sourceName = response.responseData.sceneName + " Grouped";
                 this.sendRequest("GetSourceFilter", { sourceName, filterName })
                     .then((response) => {
-                        this.setFilterEnabled(filterName, sourceName, !response.responseData.filterEnabled);
+                        this.setFilterEnabled(filterName, sourceName, !response.responseData.filterEnabled)
+                            .catch((error) => {
+                                console.error("Set Filter Enabled", error);
+                            });
+                    })
+                    .catch((error) => {
+                        console.error("Get Source Filter", error);
                     });
+            })
+            .catch((error) => {
+                console.error("Get Current Program Scene", error);
             });
     }
 
     setFilterEnabled(filterName: string, sourceName: string, filterEnabled: boolean): Promise<void> {
-        return this.sendRequest("SetSourceFilterEnabled", { sourceName, filterName, filterEnabled });
+        return this.sendRequest("SetSourceFilterEnabled", { sourceName, filterName, filterEnabled })
+            .catch((error) => {
+                console.error("Set Filter Enabled", error);
+            });
     }
 
-    setSourceEnabled(sourceName: string, sceneName: string): void {
+    toggleSourceEnabled(sourceName: string, sceneName: string): void {
         this.sendRequest("GetSceneItemId", { sceneName, sourceName })
             .then((response) => {
                 // console.log(response);
-                // console.log(JSON.stringify(response));
-                // console.log(response.responseData);
-                this.sendRequest("SetSceneItemEnabled", { sceneName, sceneItemId: response.responseData.sceneItemId, sceneItemEnabled: true });
+                // console.log(response.responseData.sceneItemId)
+                this.sendRequest("GetSceneItemEnabled", { sceneName, sceneItemId: response.responseData.sceneItemId })
+                    .then((responseInner) => {
+                        this.sendRequest("SetSceneItemEnabled", { sceneName, sceneItemId: response.responseData.sceneItemId, sceneItemEnabled: !responseInner.responseData.sceneItemEnabled })
+                            .catch((error) => {
+                                console.error("Set Scene", error);
+                            });
+                    })
+                    .catch((error) => {
+                        console.error("GetEnable", error);
+                    });
+
+            })
+            .catch((error) => {
+                console.error("Get Scene Item ID", error);
             });
     }
+
+    // setSourceEnabled(sourceName: string, sceneName: string): void {
+    //     this.sendRequest("GetSceneItemId", { sceneName, sourceName })
+    //         .then((response) => {
+    //             // console.log(response);
+    //             // console.log(JSON.stringify(response));
+    //             // console.log(response.responseData);
+    //             this.sendRequest("SetSceneItemEnabled", { sceneName, sceneItemId: response.responseData.sceneItemId, sceneItemEnabled: true });
+    //         });
+    // }
+
+    // setSourceDisabled(sourceName: string, sceneName: string): void {
+    //     this.sendRequest("GetSceneItemId", { sceneName, sourceName })
+    //         .then((response) => {
+    //             // console.log(response);
+    //             // console.log(JSON.stringify(response));
+    //             // console.log(response.responseData);
+    //             this.sendRequest("SetSceneItemEnabled", { sceneName, sceneItemId: response.responseData.sceneItemId, sceneItemEnabled: false });
+    //         });
+    // }
+
 
     // draft to have live stats from mk to show in overlay or sth
     // async getSourceScreenshot(
