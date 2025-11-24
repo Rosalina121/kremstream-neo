@@ -153,16 +153,7 @@ export default function App() {
         setMessages((prev) => prev.filter((m) => m.id !== msg.data.id));
       }
       if (msg.type === "follow") {
-        if (!latestFollow) {
-          setLatestFollow(msg.data);
-          if (followTimeoutRef.current) clearTimeout(followTimeoutRef.current);
-          followTimeoutRef.current = setTimeout(() => {
-            setLatestFollow(null);
-          }, 5000);
-        } else {
-          setFollowQueue((prev) => [...prev, msg.data]);
-          followAudioRef.current?.play();
-        }
+        setFollowQueue((prev) => [...prev, msg.data]);
       }
       if (msg.type === "toggleDarkMode") {
         setDarkMode((prev) => !prev);
@@ -182,7 +173,7 @@ export default function App() {
       if (followAudioRef.current) {
         followAudioRef.current.currentTime = 0;
         followAudioRef.current.play();
-      }
+      } 
       if (followTimeoutRef.current) clearTimeout(followTimeoutRef.current);
       followTimeoutRef.current = setTimeout(() => {
         setLatestFollow(null);
@@ -291,7 +282,8 @@ export default function App() {
         >
           {/* follow popup */}
           <div className="bg-[#000000fa] min-w-96 w-[48rem] h-fit flex m-2 rounded-2xl flex-col"
-            style={{ display: latestFollow ? "" : "none",
+            style={{
+              display: latestFollow ? "" : "none",
               boxShadow: "0px 0px 25px black"
             }}>
             <div className="text-white text-3xl p-8">
@@ -300,7 +292,7 @@ export default function App() {
             <div className="w-[90%] self-center h-[2px] bg-white/50"></div>
             <div className="flex flex-row text-2xl gap-2 text-white p-8 justify-evenly">
               <span>A folllowing error has occured: <br /> <br />
-                <span className="text-green">{latestFollow?.username}</span> has started following you. To remedy this crash thank them like, right now.
+                <span className="text-green-400">{latestFollow?.username}</span> has started following you. To remedy this crash thank them like, right now.
               </span>
               <img className="rounded-xl w-40 h-40" src={latestFollow?.profilePic} alt="" />
             </div>

@@ -96,6 +96,7 @@ export default function App() {
       const next = followQueue[0];
       setFollowQueue((prev) => prev.slice(1));
       setLatestFollow(next);
+      
       if (followAudioRef.current) {
         followAudioRef.current.currentTime = 0;
         followAudioRef.current.play();
@@ -141,7 +142,6 @@ export default function App() {
         ))}
 
       </div>
-      {/* follow */}
       {/* follow */}
       <div className={`absolute top-12 right-12`}
         style={{
