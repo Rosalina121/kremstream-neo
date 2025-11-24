@@ -152,7 +152,7 @@ export class TwitchIntegration extends AbstractIntegration {
 
     // ws://127.0.0.1:8080/ws           -- TwitchCLI mock websocket
     // wss://eventsub.wss.twitch.tv/ws  -- Real WebSocket
-    url = Bun.argv[2] == "--debug" ? "ws://127.0.0.1:8080/ws" : "wss://eventsub.wss.twitch.tv/ws";
+    url = Bun.argv[2] == "--debug" ? "ws://127.0.0.1:8069/ws" : "wss://eventsub.wss.twitch.tv/ws";
     private connect(url = this.url) {
         this.ws = new WebSocket(url);
 

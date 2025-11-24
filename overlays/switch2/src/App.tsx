@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { useIsOverflow } from "./components/isOverflow";
+import followSound from "./sounds/follow.mp3";
 
 // icons
 import { FaHeart, FaTwitch, FaYoutube } from "react-icons/fa6";
@@ -117,6 +118,7 @@ export default function App() {
   const [latestFollow, setLatestFollow] = useState<Follow | null>(null);
   const [followQueue, setFollowQueue] = useState<Follow[]>([]);
   const followTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const followAudioRef = useRef<HTMLAudioElement>(null);
 
   const [darkMode, setDarkMode] = useState(true);
   const palette = darkMode ? darkPalette : lightPalette;
@@ -159,6 +161,7 @@ export default function App() {
           }, 5000);
         } else {
           setFollowQueue((prev) => [...prev, msg.data]);
+          followAudioRef.current?.play();
         }
       }
       if (msg.type === "toggleDarkMode") {
@@ -175,6 +178,11 @@ export default function App() {
       const next = followQueue[0];
       setFollowQueue((prev) => prev.slice(1));
       setLatestFollow(next);
+
+      if (followAudioRef.current) {
+        followAudioRef.current.currentTime = 0;
+        followAudioRef.current.play();
+      }
       if (followTimeoutRef.current) clearTimeout(followTimeoutRef.current);
       followTimeoutRef.current = setTimeout(() => {
         setLatestFollow(null);
@@ -184,6 +192,7 @@ export default function App() {
 
   return (
     <div className="w-screen h-screen flex flex-row" style={{ color: palette.textOptions }}>
+      <audio ref={followAudioRef} src={followSound} />
       <div className="flex-col flex" style={{ width: 384, height: "100%" }}>
         <div className="h-18 pb-2 pl-[10%] w-full flex items-end"
           style={{ background: palette.background }}>
@@ -278,15 +287,30 @@ export default function App() {
       <div className="flex flex-col grow">
 
         {/* video */}
-        <div className="w-full aspect-video  h-[864px]">
+        <div className="w-full aspect-video  h-[864px] flex items-center justify-center"
+        >
           {/* follow popup */}
-          <div className="bg-black/90 min-w-96 w-fit h-24 flex m-2 rounded-lg"
-            style={{ display: latestFollow ? "" : "none" }}>
-            <img className="rounded-xl p-2" src={latestFollow?.profilePic} alt="" />
-            <div className="flex flex-col justify-center text-2xl gap-2 pr-2">
-              <span className="text-white">{latestFollow?.username}</span>
-              <span className="text-green-400">● Is now following</span>
+          <div className="bg-[#000000fa] min-w-96 w-[48rem] h-fit flex m-2 rounded-2xl flex-col"
+            style={{ display: latestFollow ? "" : "none",
+              boxShadow: "0px 0px 25px black"
+            }}>
+            <div className="text-white text-3xl p-8">
+              Error Code: 2137-42069
             </div>
+            <div className="w-[90%] self-center h-[2px] bg-white/50"></div>
+            <div className="flex flex-row text-2xl gap-2 text-white p-8 justify-evenly">
+              <span>A folllowing error has occured: <br /> <br />
+                <span className="text-green">{latestFollow?.username}</span> has started following you. To remedy this crash thank them like, right now.
+              </span>
+              <img className="rounded-xl w-40 h-40" src={latestFollow?.profilePic} alt="" />
+            </div>
+            <div className="grow">
+              {/*spacer*/}
+            </div>
+            <div className="w-full h-fit flex justify-center items-center py-4 text-3xl text-white border-t-white/50 border-t-[2px]">
+              OK
+            </div>
+
           </div>
         </div>
 
