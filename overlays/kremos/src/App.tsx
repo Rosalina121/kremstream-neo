@@ -4,6 +4,12 @@ import { useIsOverflow } from "./components/isOverflow";
 import followSound from "./sounds/follow.mp3";
 
 import wall_xp from "./wallpapers/xp.jpg"
+
+import ico_file from "./icons/file.png"
+import ico_pc from "./icons/pc.png"
+import ico_web from "./icons/pcweb.png"
+import ico_hl3 from "./icons/hl3.png"
+
 // icons
 import { FaBluetooth, FaVideo, FaVolumeHigh, FaWifi } from "react-icons/fa6";
 import { SiVlcmediaplayer } from "react-icons/si";
@@ -133,7 +139,7 @@ export default function App() {
         }}>
         {/* menu */}
         <div className="flex gap-4 grow flex-1">
-          <span className="font-bold">AppNameHere</span>
+          <span className="font-bold">KremStream</span>
           <span>Plik</span>
           <span>Edytuj</span>
           <span>Widok</span>
@@ -153,20 +159,20 @@ export default function App() {
       </div>
 
       {/* video */}
-      <div className="h-[48em] top-15 left-8 window">
+      <div className="h-[50em] top-15 left-8 window">
         {windowDecoration(<SiVlcmediaplayer className="" />, "VLC")}
-        <div className="aspect-video h-full bg-[#00ff00] rounded-2xl"></div>
+        <div className="aspect-video h-[48em] bg-[#ff00ff] rounded-2xl"></div>
       </div>
 
       {/* cam */}
       <div className="h-[24em] bottom-15 right-15 window">
         {windowDecoration(<FaVideo />, "Kamoso")}
-        <div className="aspect-square h-full bg-[#00ff00] rounded-2xl"></div>
+        <div className="aspect-square h-full bg-[#ff00ff] rounded-2xl"></div>
       </div>
 
       {/* chat */}
       <div className="h-[30em] w-[24em] top-24 right-24 window">
-        {windowDecoration(<IoChatboxEllipses />, "Gadu-Gadu")}
+        {windowDecoration(<IoChatboxEllipses />, "Yappu-Yappu")}
         <div className="h-[28em] bg-[#E7E783] rounded-2xl overflow-hidden" ref={ref}>
           {messages.map((msg, index) => (
             <div className="flex w-full flex-row gap-1" key={index}
@@ -210,6 +216,26 @@ export default function App() {
       <div className="absolute flex flex-col text-white/40 bottom-10 left-10">
         <span className="font-medium text-3xl">Aktywuj KremOS</span>
         <span className="text-xl">Wejdź do ustawień, by aktywować KremOS</span>
+      </div>
+      
+      {/* icons */}
+      <div className="absolute bottom-10 left-[50em] flex flex-row gap-10 text-white">
+        <div className="flex flex-col items-center w-20 text-center gap-1">
+          <img className="h-15 p-1" src={ico_hl3} alt="" />
+          <span>hl3beta.exe</span>
+        </div>
+        <div className="flex flex-col items-center w-20 text-center gap-1">
+          <img className="w-15 h-15" src={ico_pc} alt="" />
+          <span>Mój Komputer</span>
+        </div>
+        <div className="flex flex-col items-center w-20 text-center gap-1">
+          <img className="w-15 h-15" src={ico_web} alt="" />
+          <span>dupa.gay</span>
+        </div>
+        <div className="flex flex-col items-center w-20 text-center gap-1">
+          <img className="w-15 h-15" src={ico_file} alt="" />
+          <span>ban_bot.sh</span>
+        </div>
       </div>
     </div >
   );
