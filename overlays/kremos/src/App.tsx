@@ -5,12 +5,7 @@ import followSound from "./sounds/follow.mp3";
 
 import wall_xp from "./wallpapers/xp.jpg"
 // icons
-import { FaBluetooth, FaHeart, FaTwitch, FaVideo, FaVolumeHigh, FaWifi, FaYoutube } from "react-icons/fa6";
-import { SlSocialSoundcloud } from "react-icons/sl";
-import { RiBlueskyLine, RiGithubLine } from "react-icons/ri";
-import { FiYoutube } from "react-icons/fi";
-import { TbGenderTransgender } from "react-icons/tb";
-import { LuNewspaper } from "react-icons/lu";
+import { FaBluetooth, FaVideo, FaVolumeHigh, FaWifi } from "react-icons/fa6";
 import { SiVlcmediaplayer } from "react-icons/si";
 import { IoChatboxEllipses } from "react-icons/io5";
 
@@ -28,56 +23,14 @@ type Follow = {
   profilePic: string;
 };
 
-type BarButton = {
-  icon: React.ReactNode;
-  highlightText: string;
-  idx: number;
-}
-
-const barButtons: BarButton[] = [
-  {
-    icon: <FiYoutube className="text-5xl text-red-600" />,
-    highlightText: "youtube.com/@kremstream",
-    idx: 1,
-  },
-  {
-    icon: <RiBlueskyLine className="text-5xl text-blue-500" />,
-    highlightText: "bsky.com/profile/dupa.gay",
-    idx: 2,
-  },
-  {
-    icon: <RiGithubLine className="text-5xl text-gray-500" />,
-    highlightText: "github.com/rosalina121",
-    idx: 3,
-  },
-  {
-    icon: <SlSocialSoundcloud className="text-[3.25rem] text-orange-500" />,
-    highlightText: "soundcloud.com/rosalina121",
-    idx: 4,
-  },
-  {
-    icon: <LuNewspaper className="text-5xl text-purple-600" />,
-    highlightText: "dupa.gay",
-    idx: 5,
-  },
-  {
-    icon: <TbGenderTransgender className="text-5xl text-pink-500" />,
-    highlightText: "Human rights",
-    idx: 6,
-  },
-
-];
-
-
 export default function App() {
-  const [messages, setMessages] = useState<ChatMsg[]>([]);
-  const [currentHighlight, setCurrentHighlight] = useState(1);
+  const [, setMessages] = useState<ChatMsg[]>([]);
   const [latestFollow, setLatestFollow] = useState<Follow | null>(null);
   const [followQueue, setFollowQueue] = useState<Follow[]>([]);
   const followTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const followAudioRef = useRef<HTMLAudioElement>(null);
 
-  const [darkMode, setDarkMode] = useState(true); //maybe in future
+  const [, setDarkMode] = useState(true); //maybe in future
 
   const [currentTime, setCurrentTime] = useState('');
 
@@ -97,15 +50,6 @@ export default function App() {
       const msg = JSON.parse(event.data);
       if (msg.type === "chat") {
         setMessages((prev) => [...prev, msg.data]);
-        if (msg.data.text.toUpperCase().includes("!L")) {
-          setCurrentHighlight((prev) =>
-            prev - 1 < 0 ? barButtons.length : prev - 1
-          );  // ternary coz % is a remainder op, not modulo, negative numbers etc. etc.
-        }
-        if (msg.data.text.toUpperCase().includes("!R")) {
-          setCurrentHighlight((prev) => (prev + 1) % (barButtons.length + 1));
-        }
-        console.log("Current Highlight:", currentHighlight);
       }
       if (msg.type === "chatDelete") {
         setMessages((prev) => prev.filter((m) => m.id !== msg.data.id));
@@ -153,18 +97,18 @@ export default function App() {
     return () => clearInterval(interval); // Cleanup on unmount
   }, []);
 
-  function windowDecoration(icon?: React.ReactNode, name?: string) {
+  function windowDecoration(icon?: React.ReactNode, name?: string, alert?: boolean) {
     return (
       <div className="w-full h-8 bg-red-300 relative flex flex-row px-2 text-[aliceblue]">
-        <div className="grow flex-1">
+        {!alert && <div className="grow flex-1">
           <div className="translate-y-1.5">
             {icon}
           </div>
-          
-        </div>
-        <div className="font-bold grow flex-1 flex justify-center">{name}</div>
+
+        </div>}
+        <div className={`font-bold grow flex-1 flex ${alert ? "justify-start" : "justify-center"} translate-y-0.5`}>{name}</div>
         <div className="flex flex-row gap-2 grow flex-1 justify-end translate-y-1">
-          <div className="w-5 h-5 rounded-4xl bg-blue-200"></div>
+          {!alert && <div className="w-5 h-5 rounded-4xl bg-blue-200"></div>}
           <div className="w-5 h-5 rounded-4xl bg-amber-200"></div>
           <div className="w-5 h-5 rounded-4xl bg-purple-200"></div>
         </div>
@@ -173,7 +117,7 @@ export default function App() {
   }
 
   return (
-    <div 
+    <div
       className="w-screen h-screen flex flex-row"
       style={{
         backgroundImage: `url(${wall_xp})`,
@@ -190,10 +134,10 @@ export default function App() {
         {/* menu */}
         <div className="flex gap-4 grow flex-1">
           <span className="font-bold">AppNameHere</span>
-          <span>File</span>
-          <span>Edit</span>
-          <span>View</span>
-          <span>Help</span>
+          <span>Plik</span>
+          <span>Edytuj</span>
+          <span>Widok</span>
+          <span>Pomoc</span>
 
         </div>
         {/* clock */}
@@ -210,23 +154,37 @@ export default function App() {
 
       {/* video */}
       <div className="h-[48em] top-15 left-8 window">
-        {windowDecoration(<SiVlcmediaplayer className=""/>, "Video")}
+        {windowDecoration(<SiVlcmediaplayer className="" />, "Video")}
         <div className="aspect-video h-full bg-[#00ff00]"></div>
       </div>
-      
+
       {/* cam */}
       <div className="h-[24em] bottom-15 right-15 window">
-        {windowDecoration(<FaVideo/>, "Cam")}
+        {windowDecoration(<FaVideo />, "Cam")}
         <div className="aspect-square h-full bg-[#00ff00]"></div>
       </div>
-      
+
       {/* chat */}
       <div className="h-[30em] w-[24em] top-24 right-24 window">
         {windowDecoration(<IoChatboxEllipses />, "Chat")}
         <div className="h-full"></div>
         {/* todo chat lol */}
       </div>
-      
+
+      {/* alert box */}
+      <div 
+        className="window flex flex-col text-[aliceblue] h-[20em] w-[30em] top-[50%] right-[50%] translate-x-[50%] -translate-y-[50%] bg-red-300"
+        style={{
+          display: latestFollow ? "" : "none"
+        }}>
+        {windowDecoration("", "Nowy followek!", true)}
+        <div className="h-full flex flex-col items-center justify-evenly py-8 text-center">
+          <span className="font-bold text-3xl">Nowy follow!</span>
+          <span className="text-2xl"><span className="font-bold">{latestFollow?.username}</span> od teraz obeserwuje transmisję.</span>          
+        </div>
+        <div className="bg-[aliceblue] p-2 text-red-400 rounded-3xl w-48 text-center font-bold self-end m-2">OK</div>
+      </div>
+
       {/* activate kremOS*/}
       <div className="absolute flex flex-col text-white/40 bottom-10 left-10">
         <span className="font-medium text-3xl">Aktywuj KremOS</span>
