@@ -96,7 +96,7 @@ export default function App() {
       const next = followQueue[0];
       setFollowQueue((prev) => prev.slice(1));
       setLatestFollow(next);
-      
+
       if (followAudioRef.current) {
         followAudioRef.current.currentTime = 0;
         followAudioRef.current.play();
@@ -182,6 +182,7 @@ export default function App() {
       <div
         className={`absolute bottom-[44px] gap-2 left-[25rem] w-48 h-[66px] text-5xl text-white font-bold p-3 rounded-[22px] flex items-center justify-center`}
         style={{
+          display: 'none',
           backgroundColor: primaryColor,
           border: `solid 3px ${secondaryColor}`,
           outline: `solid 5px ${primaryColor}`,

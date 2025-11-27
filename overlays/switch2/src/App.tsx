@@ -173,7 +173,7 @@ export default function App() {
       if (followAudioRef.current) {
         followAudioRef.current.currentTime = 0;
         followAudioRef.current.play();
-      } 
+      }
       if (followTimeoutRef.current) clearTimeout(followTimeoutRef.current);
       followTimeoutRef.current = setTimeout(() => {
         setLatestFollow(null);
@@ -361,6 +361,6 @@ export default function App() {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 }
