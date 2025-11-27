@@ -125,8 +125,13 @@ the whole app crashes lol.
 ### Mario Kart
 Overlay that matches Mario Kart World's ui (at 1080p at least, it's all hardcoded).
 
-Chat comes in on top of coin and lap counter, there is a space for webcam, and an extra
-mmr counter next to coin/laps (which can be updated manually via `admin/deck`).
+Chat comes in on top of coin and lap counter, and there is a space for webcam. MMR counter has been commented out, you can sue an automatic solution instead.
+
+### KremOS
+Overlay resembling a cutesy-riced Linux. You have to key out magenta in OBS (`#ff00ff`) for transparency. Otherwise works similar to Switch 2.
+On `admin/deck` you can enable 4:3 instead of default 16:9 view.
+
+![KremOS](./readme-assets/kremos.png)
 
 #### Extra
 Under `/overlay/sims2ui` there is an extra html file that when used in a browser source can act as

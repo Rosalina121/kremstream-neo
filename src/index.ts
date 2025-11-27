@@ -37,6 +37,9 @@ app.ws("/ws", {
             if (data.data.subType === "darkMode") {
                 integrationManager.broadcast({ type: "toggleDarkMode" });
             }
+            if (data.data.subType === "widescreen") {
+                integrationManager.broadcast({ type: "toggleWidescreen" });
+            }
             if (data.data.subType === "pause") {
                 integrationManager.broadcast({ type: "togglePause" });
                 setTimeout(() => {

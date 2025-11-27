@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { useIsOverflow } from "./components/isOverflow";
-import followSound from "./sounds/follow.mp3";
+import followSound from "./sounds/follow.wav";
 
-import wall_xp from "./wallpapers/xp.jpg"
+// import wall_xp from "./wallpapers/xp.jpg"
+import wall_sakura from "./wallpapers/sakura.jpg"
 
 import ico_file from "./icons/file.png"
 import ico_pc from "./icons/pc.png"
@@ -36,7 +37,8 @@ export default function App() {
   const followTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const followAudioRef = useRef<HTMLAudioElement>(null);
 
-  const [, setDarkMode] = useState(true); //maybe in future
+  // const [, setDarkMode] = useState(true); //maybe in future
+  const [widescreen, setWidescreen] = useState(true);
 
   const [currentTime, setCurrentTime] = useState('');
 
@@ -63,8 +65,8 @@ export default function App() {
       if (msg.type === "follow") {
         setFollowQueue((prev) => [...prev, msg.data]);
       }
-      if (msg.type === "toggleDarkMode") {
-        setDarkMode((prev) => !prev);
+      if (msg.type === "toggleWidescreen") {
+        setWidescreen((prev) => !prev);
       }
     };
     return () => ws.close();
@@ -114,9 +116,16 @@ export default function App() {
         </div>}
         <div className={`font-bold grow flex-1 flex ${alert ? "justify-start" : "justify-center"} translate-y-0.5`}>{name}</div>
         <div className="flex flex-row gap-2 grow flex-1 justify-end translate-y-1">
-          {!alert && <div className="w-5 h-5 rounded-4xl bg-blue-500"></div>}
-          <div className="w-5 h-5 rounded-4xl bg-amber-500"></div>
-          <div className="w-5 h-5 rounded-4xl bg-purple-500"></div>
+          {!alert && <div className="w-5 h-5 rounded-4xl bg-cyan-300 flex items-center justify-center shadow">
+            {/*<LuMaximize2 className="opacity-45 scale-75" />*/}
+          </div>}
+          <div className="w-5 h-5 rounded-4xl bg-pink-400 flex items-center justify-center shadow">
+            {/*<FaWindowMinimize className="opacity-45 scale-[0.7]" />*/}
+          </div>
+          <div className="w-5 h-5 rounded-4xl bg-white flex items-center justify-center shadow">
+            {/*<IoCloseOutline className="text-2xl opacity-45" />*/}
+
+          </div>
         </div>
       </div>
     )
@@ -126,7 +135,7 @@ export default function App() {
     <div
       className="w-screen h-screen flex flex-row"
       style={{
-        backgroundImage: `url(${wall_xp})`,
+        backgroundImage: `url(${wall_sakura})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center'
       }}>
@@ -161,7 +170,10 @@ export default function App() {
       {/* video */}
       <div className="h-[50em] top-15 left-8 window">
         {windowDecoration(<SiVlcmediaplayer className="" />, "VLC")}
-        <div className="aspect-video h-[48em] bg-[#ff00ff] rounded-2xl"></div>
+        <div className="h-[48em] bg-[#ff00ff] rounded-2xl"
+          style={{
+            aspectRatio: widescreen ? "16 / 9" : "4 / 3"
+          }}></div>
       </div>
 
       {/* cam */}
@@ -200,16 +212,20 @@ export default function App() {
 
       {/* alert box */}
       <div
-        className="window flex flex-col text-[aliceblue] h-[20em] w-[30em] top-[50%] right-[50%] translate-x-[50%] -translate-y-[50%] bg-red-300"
+        className="window flex flex-col text-slate-700 h-[20em] w-[30em] top-[50%] right-[50%] translate-x-[50%] -translate-y-[50%]"
         style={{
-          display: latestFollow ? "" : "none"
+          display: latestFollow ? "" : "none",
+          animation: latestFollow ? "wiggle 1s infinite 0.1s" : ""
         }}>
         {windowDecoration("", "Nowy followek!", true)}
-        <div className="h-full flex flex-col items-center justify-evenly py-8 text-center">
+        <div className="h-full flex flex-col items-center justify-evenly py-8 mt-2 mb-1 text-center bg-red-50 rounded-2xl">
           <span className="font-bold text-3xl">Nowy follow!</span>
           <span className="text-2xl"><span className="font-bold">{latestFollow?.username}</span> od teraz obeserwuje transmisję.</span>
         </div>
-        <div className="bg-[aliceblue] p-2 text-red-400 rounded-3xl w-48 text-center font-bold self-end m-2">OK</div>
+        <div className="w-full h-fit flex items-center justify-center">
+          <div className="bg-red-300 p-2 text-[aliceblue] rounded-3xl w-48 text-center font-bold self-center m-2 shadow ">OK</div>
+
+        </div>
       </div>
 
       {/* activate kremOS*/}
@@ -217,9 +233,12 @@ export default function App() {
         <span className="font-medium text-3xl">Aktywuj KremOS</span>
         <span className="text-xl">Wejdź do ustawień, by aktywować KremOS</span>
       </div>
-      
+
       {/* icons */}
-      <div className="absolute bottom-10 left-[50em] flex flex-row gap-10 text-white">
+      <div className="absolute bottom-10 left-[50em] flex flex-row gap-10 text-white"
+        style={{
+          textShadow: "0px 0px 5px black"
+        }}>
         <div className="flex flex-col items-center w-20 text-center gap-1">
           <img className="h-15 p-1" src={ico_hl3} alt="" />
           <span>hl3beta.exe</span>
