@@ -28,6 +28,6 @@
 }
 
 .window {
-    @apply absolute outline-6 outline-red-300 rounded-2xl overflow-hidden;
+    @apply absolute outline-6 outline-red-200 bg-red-200 rounded-2xl overflow-hidden;
     box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.5);
 }

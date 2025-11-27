@@ -24,7 +24,7 @@ type Follow = {
 };
 
 export default function App() {
-  const [, setMessages] = useState<ChatMsg[]>([]);
+  const [messages, setMessages] = useState<ChatMsg[]>([]);
   const [latestFollow, setLatestFollow] = useState<Follow | null>(null);
   const [followQueue, setFollowQueue] = useState<Follow[]>([]);
   const followTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -99,7 +99,7 @@ export default function App() {
 
   function windowDecoration(icon?: React.ReactNode, name?: string, alert?: boolean) {
     return (
-      <div className="w-full h-8 bg-red-300 relative flex flex-row px-2 text-[aliceblue]">
+      <div className="w-full h-8 bg-red-200 relative flex flex-row px-2 text-slate-700">
         {!alert && <div className="grow flex-1">
           <div className="translate-y-1.5">
             {icon}
@@ -108,9 +108,9 @@ export default function App() {
         </div>}
         <div className={`font-bold grow flex-1 flex ${alert ? "justify-start" : "justify-center"} translate-y-0.5`}>{name}</div>
         <div className="flex flex-row gap-2 grow flex-1 justify-end translate-y-1">
-          {!alert && <div className="w-5 h-5 rounded-4xl bg-blue-200"></div>}
-          <div className="w-5 h-5 rounded-4xl bg-amber-200"></div>
-          <div className="w-5 h-5 rounded-4xl bg-purple-200"></div>
+          {!alert && <div className="w-5 h-5 rounded-4xl bg-blue-500"></div>}
+          <div className="w-5 h-5 rounded-4xl bg-amber-500"></div>
+          <div className="w-5 h-5 rounded-4xl bg-purple-500"></div>
         </div>
       </div>
     )
@@ -127,7 +127,7 @@ export default function App() {
       <audio ref={followAudioRef} src={followSound} />
 
       {/* top bar */}
-      <div className="flex flex-row items-center w-full h-8 bg-red-300 px-4 text-[aliceblue]"
+      <div className="flex flex-row items-center w-full h-8 bg-red-200 px-4 text-slate-700"
         style={{
           boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.5)"
         }}>
@@ -154,25 +154,46 @@ export default function App() {
 
       {/* video */}
       <div className="h-[48em] top-15 left-8 window">
-        {windowDecoration(<SiVlcmediaplayer className="" />, "Video")}
-        <div className="aspect-video h-full bg-[#00ff00]"></div>
+        {windowDecoration(<SiVlcmediaplayer className="" />, "VLC")}
+        <div className="aspect-video h-full bg-[#00ff00] rounded-2xl"></div>
       </div>
 
       {/* cam */}
       <div className="h-[24em] bottom-15 right-15 window">
-        {windowDecoration(<FaVideo />, "Cam")}
-        <div className="aspect-square h-full bg-[#00ff00]"></div>
+        {windowDecoration(<FaVideo />, "Kamoso")}
+        <div className="aspect-square h-full bg-[#00ff00] rounded-2xl"></div>
       </div>
 
       {/* chat */}
       <div className="h-[30em] w-[24em] top-24 right-24 window">
-        {windowDecoration(<IoChatboxEllipses />, "Chat")}
-        <div className="h-full"></div>
+        {windowDecoration(<IoChatboxEllipses />, "Gadu-Gadu")}
+        <div className="h-[28em] bg-[#E7E783] rounded-2xl overflow-hidden" ref={ref}>
+          {messages.map((msg, index) => (
+            <div className="flex w-full flex-row gap-1" key={index}
+              style={{
+                backgroundColor: index % 2 == 0 ? "#FFFF9B" : "#E7E783"
+              }}>
+              <div className="p-1 w-12">
+                <img src={msg.profilePic} alt="" />
+              </div>
+              <div className="flex flex-col flex-4">
+                <span className="font-bold text-xl"
+                  style={{
+                    color: msg.color
+                  }}>
+                  {msg.username}
+                </span>
+                <span className="break-normal text-blue-900" dangerouslySetInnerHTML={{ __html: msg.text }}></span>
+              </div>
+            </div>
+          ))}
+        </div>
+
         {/* todo chat lol */}
       </div>
 
       {/* alert box */}
-      <div 
+      <div
         className="window flex flex-col text-[aliceblue] h-[20em] w-[30em] top-[50%] right-[50%] translate-x-[50%] -translate-y-[50%] bg-red-300"
         style={{
           display: latestFollow ? "" : "none"
@@ -180,7 +201,7 @@ export default function App() {
         {windowDecoration("", "Nowy followek!", true)}
         <div className="h-full flex flex-col items-center justify-evenly py-8 text-center">
           <span className="font-bold text-3xl">Nowy follow!</span>
-          <span className="text-2xl"><span className="font-bold">{latestFollow?.username}</span> od teraz obeserwuje transmisję.</span>          
+          <span className="text-2xl"><span className="font-bold">{latestFollow?.username}</span> od teraz obeserwuje transmisję.</span>
         </div>
         <div className="bg-[aliceblue] p-2 text-red-400 rounded-3xl w-48 text-center font-bold self-end m-2">OK</div>
       </div>
