@@ -1,0 +1,117 @@
+@import "tailwindcss";
+
+@keyframes highlight-spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.border-gradient {
+    background: conic-gradient(from var(--angle), #4E79FB 0deg, #C9A5FA 90deg, #FCD2DD 180deg, #256FEE 270deg, #4E79FB 360deg);
+    animation: rotate-border-gradient 2s linear infinite;
+}
+
+@property --angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+
+@keyframes rotate-border-gradient {
+    to {
+        --angle: 360deg;
+    }
+}
+
+@keyframes wiggle {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(3deg);
+    }
+
+    50% {
+        transform: rotate(-3deg);
+    }
+
+    75% {
+        transform: rotate(3deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+.emote {
+    display: inline;
+}
+
+.window {
+    @apply absolute outline-6 outline-red-200 bg-red-200 rounded-2xl overflow-hidden;
+    box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.5);
+}
+
+.loading-bar {
+  background: #fecdd3; /* bg-red-200 */
+  /*box-shadow: 0px 0px 2px rgba(0,0,0,0.6);*/
+}
+
+.barber-stripes {
+    /*box-shadow: inset 0px 0px 4px rgba(0,0,0,0.6);*/
+    /*filter: drop-shadow("inset 0px 0px 10px black");*/
+  background: repeating-linear-gradient(
+    120deg,
+    #fca5a5 0px,      /* pink-300 */
+    #fca5a5 32px,
+    white 32px,     /* cyan-200 */
+    white 64px,
+    #fca5a5 64px
+  );
+  width: 200%;
+  height: 100%;
+  animation: barberMove 1.2s linear infinite reverse;
+}
+
+@keyframes barberMove {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-74px); }
+}
+
+.clippy-dialog {
+  min-width: 10em;
+  min-height: 5em;
+  background: linear-gradient(135deg, #fffbe5 80%, #f7e9b0 100%);
+  border-radius: 1.5em;
+  box-shadow: 0 4px 16px 0 rgba(0,0,0,0.12), 0 1px 0 #e6dca8 inset;
+  border: 2px solid #e6dca8;
+  padding: 1.5em 2em;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clippy-dialog-tail {
+  width: 2em;
+  height: 2em;
+  background: transparent;
+  position: absolute;
+}
+.clippy-dialog-tail::after {
+  content: "";
+  display: block;
+  width: 2em;
+  height: 2em;
+  background: linear-gradient(135deg, #fffbe5 80%, #f7e9b0 100%);
+  border-bottom-right-radius: 2em;
+  border: 2px solid #e6dca8;
+  border-top: none;
+  border-left: none;
+  box-shadow: 2px 2px 6px 0 rgba(0,0,0,0.08);
+  position: absolute;
+  left: 0;
+  top: 0;
+}

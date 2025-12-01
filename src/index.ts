@@ -138,6 +138,13 @@ app.use(
 );
 app.use(
     serveStatic({
+        prefix: "/overlay/kremoswait",
+        assets: join(process.cwd(), "overlays/kremoswait/dist").toString(),
+        alwaysStatic: true,
+    }),
+);
+app.use(
+    serveStatic({
         prefix: "/admin/deck",
         assets: join(process.cwd(), "admin/deck/dist").toString(),
         alwaysStatic: true,
