@@ -12,6 +12,7 @@ import { TwitchIntegration } from "./integrations/twitch-integration";
 import { YouTubeIntegration } from "./integrations/youtube-integration";
 import { StartupManager } from "./startup-manager";
 import { mmrManager } from "./mk-mmr";
+import { playPipe } from "./eastereggs";
 
 const app = new Elysia();
 const obsClient = new OBSWebSocket();
@@ -23,6 +24,14 @@ integrationManager.registerIntegration(new YouTubeIntegration());
 const startupManager = new StartupManager(integrationManager);
 
 initVnyan();
+
+// Listen for RURA channel points redemption
+// eventBus.onChannelPoints((event) => {
+//     console.log(event)
+//     if (event.rewardTitle === "Test Reward from CLI") {
+//         playPipe();
+//     }
+// });
 
 app.ws("/ws", {
     open(ws) {

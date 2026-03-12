@@ -236,7 +236,7 @@ export default function App() {
             </div>
 
           </div>
-          <img className="absolute bottom-0 w-[682px] h-[654px]" style={{ imageRendering: "pixelated" }} src={sims2UI} alt="" />
+          <img className="opacity-0 absolute bottom-0 w-[682px] h-[654px]" style={{ imageRendering: "pixelated" }} src={sims2UI} alt="" />
           <div className='flex items-center absolute w-36 text-[#010E61] font-[Comic] bottom-[1.2rem] left-[1.375rem] text-xl font-bold overflow-hidden'>
             <div
               // ref={textRef}

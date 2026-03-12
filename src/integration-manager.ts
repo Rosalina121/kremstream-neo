@@ -98,8 +98,12 @@ export class IntegrationManager {
         try {
             await Promise.all([
                 this.emoteFetcher.fetchTwitchEmotes(),
+                this.emoteFetcher.fetchTwitchEmotes("675296114"),   //kremstream
+                this.emoteFetcher.fetchTwitchEmotes("60577404"),    //grubulec
+                this.emoteFetcher.fetchTwitchEmotes("173950426"),   //generator frajdy
                 this.emoteFetcher.fetchBTTVEmotes(),
                 this.emoteFetcher.fetchSevenTVEmotes(),
+                this.emoteFetcher.fetchSevenTVEmotes("675296114"),  // kremstream
                 this.emoteFetcher.fetchFFZEmotes(),
             ]);
 

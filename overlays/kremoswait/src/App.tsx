@@ -8,7 +8,7 @@ import krem_os_logo from "./wallpapers/kremos.png"
 import kremówka from "./wallpapers/kremsimsshadow.png"
 
 // icons
-import { FaBluetooth, FaVideo, FaVolumeHigh, FaWifi } from "react-icons/fa6";
+import { FaBluetooth, FaVolumeHigh, FaWifi } from "react-icons/fa6";
 
 type Follow = {
   username: string;

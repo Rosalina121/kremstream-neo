@@ -20,10 +20,22 @@ export type MessageDeleteEvent = {
     source: string;
 };
 
+export type ChannelPointsEvent = {
+    id: string;
+    username: string;
+    profilePic: string;
+    rewardTitle: string;
+    rewardId: string;
+    rewardCost: number;
+    userInput?: string;
+    source: string;
+};
+
 export type StreamEvent =
     | { type: "chat"; data: ChatMessage }
     | { type: "follow"; data: FollowEvent }
-    | { type: "messageDelete"; data: MessageDeleteEvent };
+    | { type: "messageDelete"; data: MessageDeleteEvent }
+    | { type: "channelPoints"; data: ChannelPointsEvent };
 
 export class EventBus extends EventEmitter {
     publish(event: StreamEvent) {
@@ -41,6 +53,10 @@ export class EventBus extends EventEmitter {
 
     onMessageDelete(handler: (data: MessageDeleteEvent) => void) {
         this.on("messageDelete", handler);
+    }
+
+    onChannelPoints(handler: (data: ChannelPointsEvent) => void) {
+        this.on("channelPoints", handler);
     }
 
     onAnyEvent(handler: (event: StreamEvent) => void) {

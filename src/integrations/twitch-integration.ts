@@ -118,6 +118,13 @@ export class TwitchIntegration extends AbstractIntegration {
                     broadcaster_user_id: this.broadcasterUserId,
                     user_id: this.broadcasterUserId
                 }
+            },
+            {
+                type: "channel.channel_points_custom_reward_redemption.add",
+                version: "1",
+                condition: {
+                    broadcaster_user_id: this.broadcasterUserId
+                }
             }
         ];
 
@@ -240,6 +247,36 @@ export class TwitchIntegration extends AbstractIntegration {
                         type: "messageDelete",
                         data: {
                             id: event.message_id,
+                            source: "twitch"
+                        }
+                    });
+                }
+
+                if (subType === "channel.channel_points_custom_reward_redemption.add") {
+                    console.log("RURA redeemed!");
+                    const userId = event.user_id;
+                    const username = event.user_name;
+                    const rewardId = event.reward.id;
+                    const rewardTitle = event.reward.title;
+                    const rewardCost = event.reward.cost;
+                    const userInput = event.user_input;
+                    const redemptionId = event.id;
+                    let profilePic = "";
+
+                    if (userId) {
+                        profilePic = await this.fetchProfilePic(userId);
+                    }
+
+                    this.eventBus.publish({
+                        type: "channelPoints",
+                        data: {
+                            id: redemptionId,
+                            username,
+                            profilePic,
+                            rewardTitle,
+                            rewardId,
+                            rewardCost,
+                            userInput,
                             source: "twitch"
                         }
                     });
