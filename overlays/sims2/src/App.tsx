@@ -3,6 +3,7 @@ import "./App.css";
 import { useIsOverflow } from "./components/isOverflow";
 import followSound from '../sounds/follow.mp3';
 import { GrPauseFill } from "react-icons/gr";
+import latinize from 'latinize';
 
 import sims2UI from './assets/sims2hud.png'
 import { FaTwitch, FaYoutube } from "react-icons/fa6";
@@ -227,7 +228,7 @@ export default function App() {
                           {message.username}:{" "}
                         </span>
                         <span className='text-xl break-words'
-                          dangerouslySetInnerHTML={{ __html: message.text }} />
+                          dangerouslySetInnerHTML={{ __html: latinize(message.text) }} />
                       </div>
                     </div>
                   </div>
