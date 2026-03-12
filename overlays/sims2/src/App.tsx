@@ -200,7 +200,7 @@ export default function App() {
                         className="w-14 h-14 self-end rounded-lg"
                         style={{ boxShadow: "0px 0px 7px #000000dd" }}
                       />
-                      <div className="text-[#010E61] font-[Comic] w-4/5 bg-[#C7D7E4] rounded-xl border-2 border-[#010E61] p-2 relative"
+                      <div className="text-[#010E61] font-[Simlish] w-4/5 bg-[#C7D7E4] rounded-xl border-2 border-[#010E61] p-2 relative"
                         style={{ boxShadow: "2px 2px 6px #000000dd" }}
 
                       >
@@ -237,7 +237,7 @@ export default function App() {
 
           </div>
           <img className="opacity-0 absolute bottom-0 w-[682px] h-[654px]" style={{ imageRendering: "pixelated" }} src={sims2UI} alt="" />
-          <div className='flex items-center absolute w-36 text-[#010E61] font-[Comic] bottom-[1.2rem] left-[1.375rem] text-xl font-bold overflow-hidden'>
+          <div className='flex items-center absolute w-36 text-[#010E61] font-[Simlish] bottom-[1.2rem] left-[1.375rem] text-xl font-bold overflow-hidden'>
             <div
               // ref={textRef}
               className={`whitespace-nowrap`}
@@ -248,7 +248,7 @@ export default function App() {
               {/* {shouldScroll && <span className="px-4">{song}</span>} */}
             </div>
           </div>
-          <div className='flex items-center justify-center absolute w-44 text-[#010E61] font-[Comic] bottom-[3.775rem] left-[24rem] text-xl font-bold'>
+          <div className='flex items-center justify-center absolute w-44 text-[#010E61] font-[Simlish] bottom-[3.775rem] left-[24rem] text-xl font-bold'>
             <span className='translate-y-1'>{currentTime}</span>
           </div>
         </div>
@@ -270,19 +270,19 @@ export default function App() {
                 className="w-20 h-20 rounded-xl border-[3px] border-[#010E61]"
               />
               <div className='flex flex-col items-start gap-4 text-wrap'>
-                <div className="font-[Comic] flex flex-col items-center">
+                <div className="font-[Simlish] flex flex-col items-center">
                   <span className="text-2xl font-bold">
                     {latestFollow?.username || "Obserwujący"}
                   </span>
                 </div>
-                <div className="font-[Comic] flex flex-col items-center">
+                <div className="font-[Simlish] flex flex-col items-center">
                   <span className="text-xl">
                     {latestFollow.flavorText}
                   </span>
                 </div>
               </div>
             </div>
-            <button className='bg-[#95A6DE] border-[3px] border-[#010E61] text-nowrap text-2xl font-[Comic] w-32 h-12 rounded-xl'>
+            <button className='bg-[#95A6DE] border-[3px] border-[#010E61] text-nowrap text-2xl font-[Simlish] w-32 h-12 rounded-xl'>
               <span className='font-normal'>OK</span>
             </button>
           </div>
