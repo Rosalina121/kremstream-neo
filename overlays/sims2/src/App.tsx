@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { useIsOverflow } from "./components/isOverflow";
 import followSound from '../sounds/follow.mp3';
-import { GrPauseFill } from "react-icons/gr";
+// import { GrPauseFill } from "react-icons/gr";
 import latinize from 'latinize';
 
 import sims2UI from './assets/sims2hud.png'
@@ -34,9 +34,9 @@ export default function App() {
   const followAudioRef = useRef<HTMLAudioElement>(null);
   const wsRef = useRef<WebSocket | null>(null);
 
-  const [isPaused, setIsPaused] = useState(false);
+  const [, setIsPaused] = useState(false);
 
-  const [currentTime, setCurrentTime] = useState('');
+  const [, setCurrentTime] = useState('');
 
 
   const followStrings: string[] = [
@@ -97,21 +97,21 @@ export default function App() {
       setFollowQueue((prev) => prev.slice(1));
       setLatestFollow(next);
 
-      // Send freeze message
-      if (wsRef.current) {
-        wsRef.current.send(JSON.stringify({
-          type: "obs",
-          data: {
-            subType: "freeze",
-            duration: 5000 // same as follow timeout
-          }
-        }));
-      }
+      // // Send freeze message
+      // if (wsRef.current) {
+      //   wsRef.current.send(JSON.stringify({
+      //     type: "obs",
+      //     data: {
+      //       subType: "freeze",
+      //       duration: 5000 // same as follow timeout
+      //     }
+      //   }));
+      // }
 
-      if (followAudioRef.current) {
-        followAudioRef.current.currentTime = 0;
-        followAudioRef.current.play();
-      }
+      // if (followAudioRef.current) {
+      //   followAudioRef.current.currentTime = 0;
+      //   followAudioRef.current.play();
+      // }
       if (followTimeoutRef.current) clearTimeout(followTimeoutRef.current);
       followTimeoutRef.current = setTimeout(() => {
         setLatestFollow(null);
@@ -249,14 +249,14 @@ export default function App() {
               {/* {shouldScroll && <span className="px-4">{song}</span>} */}
             </div>
           </div>
-          <div className='flex items-center justify-center absolute w-44 text-[#010E61] font-[Simlish] bottom-[3.775rem] left-[24rem] text-xl font-bold'>
+          {/*<div className='flex items-center justify-center absolute w-44 text-[#010E61] font-[Simlish] bottom-[3.775rem] left-[24rem] text-xl font-bold'>
             <span className='translate-y-1'>{currentTime}</span>
-          </div>
+          </div>*/}
         </div>
       </div>
 
       {/* Call UI is outside of main tower, as to extend on top of right stream view, like in game */}
-      {latestFollow && (
+      {/*{latestFollow && (
         <div className="absolute text-[#010E61] max-w-96 bg-[#5870B1dd] p-4 rounded-[3rem] border-4 border-[#010E61] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
           style={{ boxShadow: "2px 2px 6px #000000dd" }}
         >
@@ -288,20 +288,20 @@ export default function App() {
             </button>
           </div>
         </div>
-      )}
+      )}*/}
 
       {/* Right side background */}
       {/* Change to bg-slate-500 or something, by default transaprent */}
       <div className="bg-transparent h-screen aspect-[4/3]"></div>
 
       {/* Pause overlay */}
-      {isPaused && (
+      {/*{isPaused && (
         <div className="absolute top-0 left-0 w-full h-full border-8 border-red-500 rounded-4xl">
           <div className="-translate-x-2 -translate-y-2 w-16 h-16 border-8 border-red-500 rounded-full flex items-center justify-center">
             <GrPauseFill className="text-red-500 text-3xl" />
           </div>
         </div>
-      )}
+      )}*/}
     </div>
   );
 }
